@@ -1,0 +1,193 @@
+:root {
+	--theme-color: #006771;
+	--light-theme-color: #5BA7AE;
+	--highlight-color: #FF3E5E;
+	background-color: white;
+	color: var(--theme-color);
+	font-size: 16px;
+	margin: 0;
+	overflow: hidden;
+}
+
+nav * {
+	font: normal 600 1.25rem "Mali", sans-serif;
+}
+
+p {
+	font: normal 500 1rem "Mali", sans-serif;
+}
+
+main a {
+	color: var(--light-theme-color);
+}
+
+a {
+	text-decoration: none;
+	color: var(--theme-color);
+}
+
+button {
+	border: none;
+	color: var(--theme-color);
+	background-color: transparent;
+	cursor: pointer;
+}
+
+#lesson-list {
+	padding: 0;
+}
+
+nav a {
+	display: block;
+	margin: 0.5rem 0;
+}
+
+a:visited {
+	color: var(--theme-color);
+}
+
+button:hover, a:hover {
+	color: var(--highlight-color);
+}
+
+#website-title {
+	font: normal bold 1.5rem "Mali", sans-serif;
+	width: min-content;
+	margin-bottom: 4ex;
+	cursor: pointer;
+}
+
+#website-title:hover, #website-title:active {
+	background-color: var(--theme-color);
+	color: white;
+}
+
+.title, h1 {
+	font: normal 600 1.5rem "Mali", sans-serif;
+}
+
+.commentary-text {
+	font: normal normal 1rem "Mali", sans-serif;
+}
+
+.poetic-title, main h2 {
+	font: 4rem "Indie Flower", sans-serif;
+}
+
+.poetic-p {
+	font: 1rem "Indie Flower", sans-serif;
+	color: black;
+}
+
+.focus {
+	border: 2px solid var(--theme-color);
+}
+
+.center-menu {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: 0;
+	padding: 1.5ex 3rem;
+	transform: translate(-50%, -50%);
+	width: 25rem;
+	height: 35rem;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.overflow-y-scroll { overflow-y: scroll; }
+
+/* nav bar highlight*/
+
+nav a.highlight { color: var(--theme-color); }
+
+nav a {color: var(--light-theme-color)};
+
+/* Body structure: Main */
+
+body.main-view {
+	display: block;
+}
+
+body.main-view #website-title {
+	pointer-events: none;
+}
+
+body.main-view > nav {
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+body.main-view nav a {
+	color: var(--theme-color);
+}
+
+body.main-view > main {
+	padding: 0;
+}
+
+body.main-view #lesson-content {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body.main-view #start-btn {
+	display: block;
+	justify-self: end;
+	margin-top: auto;
+}
+
+/* Body structure: Default */
+
+body {
+	width: 100vw;
+	height: auto;
+	overflow: hidden;
+}
+
+nav {
+	position: absolute;
+	top: 50%;
+	left: 5%;
+	transform: translate(0%, -50%);
+	width: 18rem;
+	height: 35rem;
+	padding: 1.5ex 0;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	transition: left ease-in-out 1s, transform ease-in-out 1s;
+	-webkit-transition: left ease-in-out 1s, transform ease-in-out 1s;
+	box-sizing: border-box;
+	z-index: 2;
+}
+
+main {
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 0 5% 0 calc(8% + 18rem);
+	width: 100%;
+	height: 100%;
+	transition: all linear 1s;
+	-webkit-transition: all linear 1s;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+#lesson-content {
+	min-height: 100%;
+	margin: 50px 0 ;
+	box-sizing: border-box;
+}
+
+#start-btn {
+	display: none;
+}
+
+@media screen and (orientation:portrait) {
+	
+}
