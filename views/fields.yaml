@@ -1,0 +1,19 @@
+---
+document:
+- description
+- site name
+- title
+- og url
+- og title
+- og description
+- og image url
+- og image format
+- og image width
+- og image height
+- content
+
+node:
+- node id
+- next id
+- node title
+- template id
