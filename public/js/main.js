@@ -18,6 +18,11 @@ function main(event) {
     let newId = window.location.hash.slice(1);
     Render.run(newId, ref);
   });
+  ref.main.addEventListener("wheel", (event) => {
+    if (ref.body.classList.contains("choice-view")) {
+      ref.main.scrollLeft += event.deltaY;
+    }
+  });
   Render.startButton("start-btn", ref);
   Render.iconButton("website-title", ref);
 }

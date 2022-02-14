@@ -2,6 +2,8 @@
 	--theme-color: #006771;
 	--light-theme-color: #5BA7AE;
 	--highlight-color: #FF3E5E;
+	--border-size: 4rem;
+	--focus-border: 2px solid var(--theme-color);
 	background-color: white;
 	color: var(--theme-color);
 	font-size: 16px;
@@ -78,10 +80,6 @@ button:hover, a:hover {
 	color: black;
 }
 
-.focus {
-	border: 2px solid var(--theme-color);
-}
-
 .center-menu {
 	position: absolute;
 	top: 50%;
@@ -96,14 +94,14 @@ button:hover, a:hover {
 }
 
 .overflow-y-scroll { overflow-y: scroll; }
+.overflow-x-scroll { overflow-x: scroll; }
 
 /* nav bar highlight*/
 
 a.highlight { color: var(--theme-color); }
-
 nav a {color: var(--light-theme-color)};
 
-/* Body structure: Main */
+/* Structure: Main */
 
 body.main-view {
 	display: block;
@@ -139,7 +137,7 @@ body.main-view #start-btn {
 	margin-top: auto;
 }
 
-/* Body structure: Default */
+/* Structure Content */
 
 body {
 	width: 100vw;
@@ -150,7 +148,7 @@ body {
 nav {
 	position: absolute;
 	top: 50%;
-	left: 5%;
+	left: var(--border-size);
 	transform: translate(0%, -50%);
 	width: 18rem;
 	height: 35rem;
@@ -168,7 +166,7 @@ main {
 	position: absolute;
 	top: 0;
 	left: 0;
-	padding: 0 5% 0 calc(8% + 18rem);
+	padding: 0 var(--border-size) 0 calc(var(--border-size) + 18rem);
 	width: 100%;
 	height: 100%;
 	transition: all linear 1s;
@@ -178,13 +176,33 @@ main {
 }
 
 #lesson-content {
-	min-height: 100%;
-	margin: 50px 0 ;
+	min-height: calc(100% - (2 * var(--border-size)));
+	border: var(--focus-border);
+	margin: 4rem 0 ;
 	box-sizing: border-box;
+	overflow-x: hidden;
 }
 
 #start-btn {
 	display: none;
+}
+
+/* Structure: Choice */
+body.choice-view main {
+	box-sizing: content-box;
+}
+
+body.choice-view #lesson-content {
+	display: flex;
+	flex-direction: row;
+	border: none;
+	width: max-content;
+}
+
+body.choice-view #lesson-content > * {
+	width: 25rem;
+	margin-right: 2rem;
+	border: var(--focus-border);
 }
 
 @media screen and (orientation:portrait) {
