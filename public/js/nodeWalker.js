@@ -1,3 +1,5 @@
+import { NODE_FIELD_NAMES } from "./constants.js";
+
 /**
 * Append the current node in the nodeWalker instance
 * inside an exsisting html element.
@@ -18,14 +20,27 @@ export function renderNodeWalker(nodeWalker, element) {
 export class NodeWalker {
 	/**
 	 * @param {NodeList} nodes 
+	 * @param {String} fieldName
 	 * @param {String} id 
 	 */
-	constructor(nodes, id) {
+	constructor(nodes, id, fieldName = NODE_FIELD_NAMES.nextNode) {
 		this._currentId = id;
+		this.fieldNameForNextNode = fieldName;
 		this.hash = new Map();
 		for (let node of nodes) {
 			if (node.nodeName == "SECTION")this.hash.set(node.id, node.cloneNode(true));
 		}
+	}
+
+	sandbox(func) {
+		let originalId = this._currentId;
+		let originalFieldNameForNextNode = this.fieldNameForNextNode;
+		let originalHash = this.hash;
+		let result = func(this);
+		this._currentId = originalId;
+		this.fieldNameForNextNode = originalFieldNameForNextNode;
+		this.hash = originalHash;
+		return result;
 	}
 
 	/**
@@ -64,15 +79,15 @@ export class NodeWalker {
 	 * @returns {Boolean}
 	 */
 	isEndNode() {
-		return !this.currentNode.hasAttribute("next");
+		return !this.currentNode.hasAttribute(this.fieldNameForNextNode);
 	}
 			
 	/**
-	 * Returns an array of id(s) of next Node(s)
+	 * Returns an array of id(s) of next Node(s).
 	 * @returns {Array<String>}
 	 */
 		nextIds() {
-		return this.currentNode.getAttribute("next").split(',');
+		return this.currentNode.getAttribute(this.fieldNameForNextNode).split(',');
 	}
 
 	/**
@@ -82,7 +97,7 @@ export class NodeWalker {
 	 */
 	wanderTillNodeChoice() {
 		let originalId = this._currentId;
-		let arr = [this.currentNode];
+		let arr = [];
 		while (this.next()) {
 			arr.push(this.currentNode);
 		}
@@ -93,23 +108,22 @@ export class NodeWalker {
 	/**
 	 * Perform a depth first search from a node to another node,
 	 * When the target node is found, returns an array of nodes that
-	 * have been traversed in the search. Otherwise, return false, 
-	 * indicating a failure search.
+	 * have been traversed in the search. Otherwise, return the current node.
 	 * @param {String} fromId 
 	 * @param {String} toId 
-	 * @returns {Array<Node> | Boolean}
+	 * @returns {Array<Node> }
 	 */
-	wanderFromTo(fromId, toId) {
+	 wanderFromTo(fromId, toId) {
 		let arr = [];
 		let originalId = this._currentId;
 		this._currentId = fromId;
-		do {
+		while (this.next()) {
 			arr.push(this.currentNode);
 			if (this._currentId == toId) {
 				this._currentId = originalId;
 				return arr;
 			}
-		} while (this.next());
+		}
 		if (!this.isEndNode()) {
 			// If there is a choice, make a depth first search recursively.
 			this.nextIds().forEach(id => {
@@ -121,7 +135,7 @@ export class NodeWalker {
 			});
 		}
 		this._currentId = originalId;
-		return false;
+		return [this.currentNode];
 	}
 
 	/**

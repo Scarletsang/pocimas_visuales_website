@@ -1,0 +1,13 @@
+Before 14 February (Unrecorded date)
+- *Backend*: 
+	- wrote a custom markdown plugin for the kramdown markdown parser to process received markdown documents into html.
+	- TODO: Defined a structure for the markdown and yaml document for content management. Until this structure is done, the server is hosting the content statically.
+- *Frontend*: 
+	- Complete the basic css styling of the home page and content page.
+	- TODO: Finished dynmaic rendering on frontend.
+
+14 February 
+- *Frontend*: 
+	-	Finished dynamic rendering pages from url hash change.
+	- TODO: css styling of the inner pages.
+	- TODO: Dynamic page rendering further debug.

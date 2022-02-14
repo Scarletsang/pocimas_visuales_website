@@ -23,7 +23,6 @@ main a {
 
 a {
 	text-decoration: none;
-	color: var(--theme-color);
 }
 
 button {
@@ -42,9 +41,9 @@ nav a {
 	margin: 0.5rem 0;
 }
 
-a:visited {
-	color: var(--theme-color);
-}
+/* a:visited {
+	color: unset;
+} */
 
 button:hover, a:hover {
 	color: var(--highlight-color);
@@ -100,7 +99,7 @@ button:hover, a:hover {
 
 /* nav bar highlight*/
 
-nav a.highlight { color: var(--theme-color); }
+a.highlight { color: var(--theme-color); }
 
 nav a {color: var(--light-theme-color)};
 
@@ -166,7 +165,7 @@ nav {
 }
 
 main {
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	padding: 0 5% 0 calc(8% + 18rem);
