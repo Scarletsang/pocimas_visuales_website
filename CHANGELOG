@@ -12,3 +12,9 @@ Before 14 February (Unrecorded date)
 	- Finished rendering different structures of pages.
 	- TODO: css styling of the inner pages.
 	- TODO: Dynamic page rendering further debug.
+
+15 February
+- *Backend*:
+  - Added parsing for audio and video
+	- Fiinished connecting up the backend and frontend.
+	- TODO: Parsing for container contents in markdown (choice view and recipe view)
