@@ -1,2 +1,2 @@
-%section{:id => node_id,"lesson-title" => lesson_title, :structure => node_structure_type, :next => (next_ids.empty? nil : next_ids)}
-  - 
+%section{:id => id,"lesson-title" => (title if defined?(title)), :structure => (structure if defined?(structure)), :nav => (nav if defined?(nav)), :next => (node_next if defined?(node_next))}
+  = node_content if defined?(node_content)
