@@ -2,7 +2,8 @@
 	--theme-color: #006771;
 	--light-theme-color: #5BA7AE;
 	--highlight-color: #FF3E5E;
-	--border-size: 4rem;
+	--border-width: 4rem;
+	--nav-width: 18rem;
 	--focus-border: 2px solid var(--theme-color);
 	background-color: white;
 	color: var(--theme-color);
@@ -41,6 +42,10 @@ button {
 nav a {
 	display: block;
 	margin: 0.5rem 0;
+}
+
+section {
+	padding: 2rem;
 }
 
 /* a:visited {
@@ -148,9 +153,9 @@ body {
 nav {
 	position: absolute;
 	top: 50%;
-	left: var(--border-size);
+	left: var(--border-width);
 	transform: translate(0%, -50%);
-	width: 18rem;
+	width: var(--nav-width);
 	height: 35rem;
 	padding: 1.5ex 0;
 	display: flex;
@@ -165,9 +170,9 @@ nav {
 main {
 	position: absolute;
 	top: 0;
-	left: 0;
-	padding: 0 var(--border-size) 0 calc(var(--border-size) + 18rem);
-	width: 100%;
+	left: calc(var(--border-width) + var(--nav-width));
+	padding-right: var(--border-width);
+	width: calc(100% - var(--border-width) - var(--nav-width));
 	height: 100%;
 	transition: all linear 1s;
 	-webkit-transition: all linear 1s;
@@ -176,7 +181,7 @@ main {
 }
 
 #lesson-content {
-	min-height: calc(100% - (2 * var(--border-size)));
+	min-height: calc(100% - (2 * var(--border-width)));
 	border: var(--focus-border);
 	margin: 4rem 0 ;
 	box-sizing: border-box;
@@ -188,21 +193,43 @@ main {
 }
 
 /* Structure: Choice */
-body.choice-view main {
-	box-sizing: content-box;
-}
 
 body.choice-view #lesson-content {
 	display: flex;
 	flex-direction: row;
+	gap: 2rem;
 	border: none;
 	width: max-content;
+	padding: 2rem;
 }
 
 body.choice-view #lesson-content > * {
 	width: 25rem;
-	margin-right: 2rem;
 	border: var(--focus-border);
+}
+
+/* Structure: Resource */
+
+body.resource-view #lesson-content {
+	display: flex;
+	flex-direction: row;
+	gap: 2rem 2rem;
+	flex-wrap: wrap;
+	border: none;
+	width: 100%;
+	padding: 2rem;
+}
+
+body.resource-view #lesson-content > * {
+	width: 20rem;
+	height: 20rem;
+	border: var(--focus-border);
+}
+
+/* Inner content styles */
+
+main p {
+
 }
 
 @media screen and (orientation:portrait) {
