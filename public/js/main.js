@@ -1,6 +1,6 @@
 import * as Render from "./renderer.js";
 import { NavigationBar } from "./navigationBar.js";
-import { NodeWalker } from "./nodewalker.js";
+import { NodeWalker } from "./nodeWalker.js";
 import { ENTRY_NODE_ID } from "./constants.js";
 
 function main(event) {

@@ -1,4 +1,4 @@
-import { renderNodeWalker } from "./nodewalker.js";
+import { renderNodeWalker } from "./nodeWalker.js";
 import { ENTRY_NODE_FIELD_NAMES, ENTRY_NODE_ID } from "./constants.js";
 
 /**
