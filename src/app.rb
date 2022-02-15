@@ -1,12 +1,12 @@
 require 'sinatra'
-require 'haml'
+require_relative './renderer.rb'
 
 class App < Sinatra::Base
 	set :public_folder, 'public'
 	set :views, 'views'
 
 	get '/' do
-		send_file File.join(settings.public_folder, 'index.html')
+		Document.from_yaml(UPLOAD_FOLDER + "config.yaml").render
 	end
 
 	get '/image/og-img' do
