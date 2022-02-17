@@ -18,3 +18,13 @@ Before 14 February (Unrecorded date)
   - Added parsing for audio and video
 	- Fiinished connecting up the backend and frontend.
 	- TODO: Parsing for container contents in markdown (choice view and recipe view)
+
+17 February
+- *Frontend*:
+  - Finished most of the structural css styling.
+	- Improved Node wandering functions by adding a NodeHistory object.
+	- TODO: pre-download media of one page ahead to minimize latancy of image loading between nodes.
+	- TODO: More css styling after getting comments from Cristina.
+- *Backend*:
+  - Completed all custom markdown parsing: gallery tag, section tag, video tag, audio tag and side-by-side sections (left tag and right tag).
+	- Added a route to dynamically grab media from server.
