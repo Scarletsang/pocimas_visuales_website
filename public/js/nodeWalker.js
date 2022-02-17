@@ -12,6 +12,51 @@ export function renderNodeWalker(nodeWalker, element) {
 	}
 }
 
+class NodeHistory {
+	constructor(root) {
+		this.root = root;
+		this.record = [];
+		this.choices = [];
+	}
+
+	get() {
+		return this.record;
+	}
+
+	getChoice() {
+		return this.choices;
+	}
+
+	add(nodeId) {
+		if (nodeId == this.root) {
+			this.record = [];
+			this.choices = [];
+			return this;
+		}
+		let nodeIndexInRecord = this.record.indexOf(nodeId);
+		if (nodeIndexInRecord >= 0) {
+			this.record = this.record.slice(0, nodeIndexInRecord + 1);
+			this.choices = this.choices.filter((choice) => {
+				return this.record.includes(choice);
+			});
+		}
+		else {
+			this.record.push(nodeId);
+		}
+	}
+
+	addChoice(nodeId) {
+		this.choices.push(nodeId);
+	}
+
+	clone() {
+		let clone = new NodeHistory(this.root);
+		clone.record = Array.from(this.record);
+		clone.choices = Array.from(this.choices);
+		return clone;
+	}
+}
+
 /**
  * A Pseudo iterator (not strictly following the @iterator protoco)
  * that tranverse from a HTML sections to another one. A Node here 
@@ -23,24 +68,11 @@ export class NodeWalker {
 	 * @param {String} fieldName
 	 * @param {String} id 
 	 */
-	constructor(nodes, id, fieldName = NODE_FIELD_NAMES.nextNode) {
+	constructor(id, history, hash, fieldName = NODE_FIELD_NAMES.nextNode) {
 		this._currentId = id;
+		this.history = history;
+		this.hash = hash;
 		this.fieldNameForNextNode = fieldName;
-		this.hash = new Map();
-		for (let node of nodes) {
-			if (node.nodeName == "SECTION")this.hash.set(node.id, node.cloneNode(true));
-		}
-	}
-
-	sandbox(func) {
-		let originalId = this._currentId;
-		let originalFieldNameForNextNode = this.fieldNameForNextNode;
-		let originalHash = this.hash;
-		let result = func(this);
-		this._currentId = originalId;
-		this.fieldNameForNextNode = originalFieldNameForNextNode;
-		this.hash = originalHash;
-		return result;
 	}
 
 	/**
@@ -50,19 +82,21 @@ export class NodeWalker {
 	 * @returns {NodeWalker}
 	 */
 	static fromTemplateTag(id) {
-		let template = document.getElementsByTagName("template")[0].content.childNodes;
-		return new NodeWalker(template, id);
+		let nodes = document.getElementsByTagName("template")[0].content.childNodes;
+		let history = new NodeHistory(id);
+		let hash = new Map();
+		for (let node of nodes) {
+			if (node.nodeName == "SECTION")hash.set(node.id, node.cloneNode(true));
+		}
+		return new NodeWalker(id, history, hash);
 	}
 
-	/**
-	 * @param {String} newId
-	 */
-	set currentId(newId) {
-		if (this.hash.has(newId)) {
-			this._currentId = newId;
-		} else {
-			this.shoutInvalidIdError(newId);
-		}
+	clone() {
+		let id = this._currentId;
+		let history = this.history.clone();
+		let hash = this.hash;
+		let fieldName = this.fieldNameForNextNode;
+		return new NodeWalker(id, history, hash, fieldName);
 	}
 
 	/**
@@ -78,15 +112,19 @@ export class NodeWalker {
 	 * Returns whether the current node is an end node or not.
 	 * @returns {Boolean}
 	 */
-	isEndNode() {
+	get isEndNode() {
 		return !this.currentNode.hasAttribute(this.fieldNameForNextNode);
+	}
+
+	get isChoiceNode() {
+		return !this.isEndNode && (this.nextIds().length > 1);
 	}
 			
 	/**
 	 * Returns an array of id(s) of next Node(s).
 	 * @returns {Array<String>}
 	 */
-		nextIds() {
+	nextIds() {
 		return this.currentNode.getAttribute(this.fieldNameForNextNode).split(',');
 	}
 
@@ -96,12 +134,11 @@ export class NodeWalker {
 	 * @returns {Array<Node>}
 	 */
 	wanderTillNodeChoice() {
-		let originalId = this._currentId;
+		let clone = this.clone();
 		let arr = [];
-		while (this.next()) {
-			arr.push(this.currentNode);
+		while (clone.next()) {
+			arr.push(clone.currentNode);
 		}
-		this._currentId = originalId;
 		return arr;
 	}
 
@@ -113,29 +150,29 @@ export class NodeWalker {
 	 * @param {String} toId 
 	 * @returns {Array<Node> }
 	 */
-	 wanderFromTo(fromId, toId) {
+	wanderFromTo(fromId, toId) {
+		let clone = this.clone();
+		let nodeResult = clone.teleport(fromId);
+		if (!nodeResult) return false;
 		let arr = [];
-		let originalId = this._currentId;
-		this._currentId = fromId;
-		while (this.next()) {
-			arr.push(this.currentNode);
-			if (this._currentId == toId) {
-				this._currentId = originalId;
+		do {
+			arr.push(clone.currentNode);
+			if (clone.currentId == toId) {
 				return arr;
 			}
+		} while (clone.next());
+		if (clone.isEndNode) return false;
+		let choice = clone.history.choices.shift();
+		let node = clone.next(choice);
+		if (node) {
+			return arr.concat(clone.wanderFromTo(clone.currentId, toId));
 		}
-		if (!this.isEndNode()) {
-			// If there is a choice, make a depth first search recursively.
-			this.nextIds().forEach(id => {
-				let nodesAfterChoice = this.wanderFromTo(id, toId);
-				if (nodesAfterChoice) {
-					this._currentId = originalId;
-					return arr.concat(nodesAfterChoice);
-				}
-			});
+		// If there is a choice, make a depth first search recursively.
+		for (let id of clone.nextIds()) {
+			let nodesAfterChoice = clone.wanderFromTo(id, toId);
+			if (nodesAfterChoice) return arr.concat(nodesAfterChoice);
 		}
-		this._currentId = originalId;
-		return [this.currentNode];
+		return false;
 	}
 
 	/**
@@ -144,17 +181,17 @@ export class NodeWalker {
 	 * @returns {{value: Node, done: Boolean} | Boolean}
 	 */
 	next(nextId = null) {
-		if (this.isEndNode()) return false;
-		let nextIdsArray = this.nextIds();
-		if (nextIdsArray.length == 1) {
-			this._currentId = nextIdsArray[0];
-			return {value: this.currentNode, done: this.isEndNode()};
-		}
-		if (!nextIdsArray.includes(nextId)) {
-			return false;
-		}
-		this._currentId = nextId;
-		return {value: this.currentNode, done: this.isEndNode()};
+		if (this.isEndNode) return false;
+		if (this.isChoiceNode) return this.teleport(nextId);
+		return this.teleport(this.nextIds()[0]);
+	}
+	
+	teleport(nodeId) {
+		if (!this.hash.has(nodeId)) return false;
+		this.history.add(nodeId);
+		if (this.isChoiceNode) this.history.addChoice(nodeId);
+		this._currentId = nodeId;
+		return {value: this.currentNode, done: this.isEndNode};
 	}
 
 	/** private method */

@@ -9,11 +9,13 @@ function main(event) {
     nav:  document.getElementsByTagName("nav")[0],
     main: document.getElementsByTagName("main")[0],
     lessonContent: document.getElementById("lesson-content"),
+    nextLessonButton: document.getElementById("next-lesson-btn"),
     lessonList: new NavigationBar(document.getElementById("lesson-list")),
     nodeWalker: NodeWalker.fromTemplateTag(ENTRY_NODE_ID)
   }
-  if (window.location.hash.slice(1)) window.location.hash = `#${ENTRY_NODE_ID}`;
-  Render.run(ENTRY_NODE_ID, ref);
+  let page = window.location.hash.slice(1);
+  if (!page) window.location.hash = `#${ENTRY_NODE_ID}`;
+  Render.run(page, ref);
   window.addEventListener("hashchange", (event) => {
     let newId = window.location.hash.slice(1);
     Render.run(newId, ref);
@@ -25,6 +27,7 @@ function main(event) {
   });
   Render.startButton("start-btn", ref);
   Render.iconButton("website-title", ref);
+  Render.nextLessonButton("next-lesson-btn", ref);
 }
 
 window.addEventListener('DOMContentLoaded', main);

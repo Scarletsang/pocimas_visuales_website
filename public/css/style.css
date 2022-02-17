@@ -3,7 +3,7 @@
 	--light-theme-color: #5BA7AE;
 	--highlight-color: #FF3E5E;
 	--border-width: 4rem;
-	--nav-width: 18rem;
+	--nav-width: calc(16rem + 5%);
 	--focus-border: 2px solid var(--theme-color);
 	background-color: white;
 	color: var(--theme-color);
@@ -28,6 +28,10 @@ a {
 	text-decoration: none;
 }
 
+video {
+	width: 100%;
+}
+
 button {
 	border: none;
 	color: var(--theme-color);
@@ -45,7 +49,11 @@ nav a {
 }
 
 section {
-	padding: 2rem;
+	padding: 5%;
+}
+
+img {
+	max-width: 100%;
 }
 
 /* a:visited {
@@ -98,8 +106,36 @@ button:hover, a:hover {
 	overflow: hidden;
 }
 
+.hide { display: none; }
+
 .overflow-y-scroll { overflow-y: scroll; }
 .overflow-x-scroll { overflow-x: scroll; }
+
+.side-by-side {
+	display: flex;
+	flex-direction: row;
+	gap: 5%;
+	padding-bottom: 0;
+}
+
+.left, .right {
+	width: 45%;
+}
+
+.right { order: 2 }
+.left  { order: 1 }
+
+.gallery {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 2%;
+}
+
+.gallery > img {
+	width: 32%;
+	margin-top: 2%;
+}
 
 /* nav bar highlight*/
 
@@ -171,7 +207,10 @@ main {
 	position: absolute;
 	top: 0;
 	left: calc(var(--border-width) + var(--nav-width));
+	padding-top: var(--border-width);
 	padding-right: var(--border-width);
+	padding-bottom: calc( 1.5 * var(--border-width));
+	padding-left: 0;
 	width: calc(100% - var(--border-width) - var(--nav-width));
 	height: 100%;
 	transition: all linear 1s;
@@ -183,7 +222,6 @@ main {
 #lesson-content {
 	min-height: calc(100% - (2 * var(--border-width)));
 	border: var(--focus-border);
-	margin: 4rem 0 ;
 	box-sizing: border-box;
 	overflow-x: hidden;
 }
@@ -192,14 +230,26 @@ main {
 	display: none;
 }
 
+#next-lesson-btn {
+	position: absolute;
+	right: var(--border-width);
+}
+
+#next-lesson-btn > h1 {
+	margin: 0;
+	margin-top: 1rem;
+}
+
 /* Structure: Choice */
 
 body.choice-view #lesson-content {
+	position: absolute;
 	display: flex;
 	flex-direction: row;
 	gap: 2rem;
 	border: none;
 	width: max-content;
+	height: calc(100% - (2 * var(--border-width)));
 	padding: 2rem;
 }
 
@@ -208,11 +258,24 @@ body.choice-view #lesson-content > * {
 	border: var(--focus-border);
 }
 
+body.choice-view #lesson-content > section {
+	cursor: pointer;
+}
+
+body.choice-view #lesson-content > section:hover,
+body.choice-view #lesson-content > section:active {
+	background-color: var(--theme-color);
+	color: white;
+	transition: all ease-in-out 0.25s;
+}
+
 /* Structure: Resource */
 
 body.resource-view #lesson-content {
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
+	min-width: 100%;
 	gap: 2rem 2rem;
 	flex-wrap: wrap;
 	border: none;
