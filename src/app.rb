@@ -4,6 +4,10 @@ require_relative './mappings.rb'
 
 class App < Sinatra::Base
 	include FORMATS
+	configure :production, :development do
+    enable :logging
+  end
+
 	set :upload_folder, 'uploads'
 	set :public_folder, 'public'
 	set :views, 'views'
@@ -16,10 +20,17 @@ class App < Sinatra::Base
 		media_type = params['captures'][0]
 		media_formats = MEDIA_FORMATS[media_type]
 		mime_type = media_formats[params['captures'][2]]
-		pass if mime_type.nil?
-		send_file File.expand_path("#{media_type}/#{params['captures'][1]}", settings.upload_folder),
+		halt 404 if mime_type.nil?
+		file = File.expand_path("#{media_type}/#{params['captures'][1]}", settings.upload_folder)
+		halt 404 unless File.exist? file
+		logger.info file
+		send_file file,
 			:type => mime_type,
 			:disposition => 'inline'
+	end
+
+	get /\/.*/ do
+		halt 404
 	end
 
 end

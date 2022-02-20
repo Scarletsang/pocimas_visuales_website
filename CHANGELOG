@@ -28,3 +28,7 @@ Before 14 February (Unrecorded date)
 - *Backend*:
   - Completed all custom markdown parsing: gallery tag, section tag, video tag, audio tag and side-by-side sections (left tag and right tag).
 	- Added a route to dynamically grab media from server.
+
+20 February
+- *Backend*:
+  - FIXED BUG: Wrong return value of the get route that causes sinatra to interpret it as a rack respond, yielding an error to process it.
