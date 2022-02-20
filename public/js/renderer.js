@@ -1,4 +1,3 @@
-import { renderNodeWalker } from "./nodeWalker.js";
 import { ENTRY_NODE_FIELD_NAMES, ENTRY_NODE_ID } from "./constants.js";
 
 /**
@@ -27,13 +26,13 @@ function router(lastId, ref) {
 }
 
 function mainPage(lastId, ref) {
-  clearLessonContent(ref);
+  lessonPageContent(ref);
+  preloadNextLessonMedia(ref);
   ref.body.classList = "";
   ref.body.classList.add("main-view");
   ref.main.classList.add("center-menu");
   ref.nav.classList.add("center-menu");
   ref.nextLessonButton.classList.add("hide");
-  ref.lessonContent.classList.add("focus");
   ref.main.classList.remove("overflow-x-scroll");
   ref.main.classList.remove("overflow-y-scroll");
   homePageNav(ref);
@@ -72,9 +71,14 @@ function resourcePage(lastId, ref) {
   else {addScrollFunction()};
 }
 
+////////////////////////////////////
+///////  General renderers  ////////
+////////////////////////////////////
+
 function lessonPageBase(lastId, ref) {
   lessonPageStyles(ref);
   lessonPageContent(ref);
+  preloadNextLessonMedia(ref);
   ref.lessonList.usePrefix = true;
   lessonPageNav(ref);
 }
@@ -90,9 +94,20 @@ function lessonPageStyles(ref) {
   }
 }
 
+function preloadNextLessonMedia(ref) {
+  if (ref.nodeWalker.isEndNode) return ;
+  ref.nodeWalker.nextIds().forEach( id => {
+    let nextNode = ref.nodeWalker.hash.get(id);
+    let images = nextNode.getElementsByTagName("img");
+    for (const image of images) {
+      ref.mediaPreloader.addImage(image.src);
+    }
+  });
+}
+
 function lessonPageContent(ref) {
   clearLessonContent(ref);
-  renderNodeWalker(ref.nodeWalker, ref.lessonContent);
+  ref.main.insertBefore(ref.nodeWalker.currentNode, ref.nextLessonButton);
 }
 
 function lessonPageNav(ref) {
@@ -107,11 +122,19 @@ function lessonPageNav(ref) {
   ref.lessonList.highlight(ref.nodeWalker.currentId);
 }
 
-/**
- * Render the home page navigation bar.
- * @param {*} ref A global store that get passed down in every renderer functions.
- */
- function homePageNav(ref) {
+function clearLessonContent(ref) {
+  let cache = document.getElementById("cache");
+  let lessonContents = ref.main.getElementsByTagName("section");
+  for (let content of lessonContents) {
+    cache.appendChild(content);
+  }
+}
+
+////////////////////////////////////
+//// Individual pages renderers ////
+////////////////////////////////////
+
+function homePageNav(ref) {
   ref.lessonList.clear();
   ref.lessonList.usePrefix = false;
   let clone = ref.nodeWalker.clone();
@@ -122,7 +145,7 @@ function lessonPageNav(ref) {
 }
 
 function choicePageCLickableSections(ref) {
-  let choices = ref.lessonContent.getElementsByTagName("section");
+  let choices = ref.main.getElementsByClassName("lesson-content")[0].getElementsByTagName("section");
   let nextIds = ref.nodeWalker.nextIds();
   for (let i = 0; i < choices.length; i++) {
     choices[i].addEventListener("click", () => {
@@ -131,32 +154,16 @@ function choicePageCLickableSections(ref) {
   }
 }
 
-function nextNodeContent(ref, nodeId = null) {
-  clearLessonContent(ref);
-  let node = ref.nodeWalker.next(nodeId);
-  if (node) renderNodeWalker(ref.nodeWalker, ref.lessonContent);
-}
+////////////////////////////////////
+/////  Button's event attacher /////
+//////////////////////////////////// 
 
-function clearLessonContent(ref) {
-  ref.lessonContent.innerHTML = "";
-}
-
-/**
- * Attach event listeners to the icon button.
- * @param {*} elementId id of the icon button.
- * @param {*} ref A global store that get passed down in every renderer functions.
- */
- export function iconButton(elementId, ref) {
+export function iconButton(elementId, ref) {
   document.getElementById(elementId).addEventListener("click", (event) => {
     window.location.hash = `#${ENTRY_NODE_ID}`;
   });
 }
 
-/**
- * Attach event listeners to the start button.
- * @param {*} elementId id of the start button.
- * @param {*} ref A global store that get passed down in every renderer functions.
- */
 export function startButton(elementId, ref) {
   document.getElementById(elementId).addEventListener("click", (event) => {
     let startNodeId = ref.nodeWalker.currentNode.getAttribute(ENTRY_NODE_FIELD_NAMES.start);
