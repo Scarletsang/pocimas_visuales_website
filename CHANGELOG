@@ -30,5 +30,10 @@ Before 14 February (Unrecorded date)
 	- Added a route to dynamically grab media from server.
 
 20 February
+- *Frontend*:
+  - Cache downloaded media. Nodes are no longer cloned but moved between the content container and hidden container with the id "#cache".
+	- Media will be downloaded one page before, so to decrease time for the audience to wait for media to download when they switch page.
+	- Horizontal scroll are set to be passive (if this feature is found in the browser) to improve performance for the browser to handle the "wheel" event with the native code.
 - *Backend*:
   - FIXED BUG: Wrong return value of the get route that causes sinatra to interpret it as a rack respond, yielding an error to process it.
+	- Rendering changed so to adhere to the cache download media feature.

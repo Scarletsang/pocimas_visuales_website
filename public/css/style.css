@@ -128,13 +128,15 @@ button:hover, a:hover {
 .gallery {
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
 	flex-wrap: wrap;
-	gap: 2%;
+	margin: -1%;
 }
 
 .gallery > img {
-	width: 32%;
-	margin-top: 2%;
+	width: 30%;
+	height: intrinsic;
+	margin: 1%;
 }
 
 /* nav bar highlight*/
@@ -165,7 +167,7 @@ body.main-view > main {
 	padding: 0;
 }
 
-body.main-view #lesson-content {
+body.main-view .lesson-content {
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -219,11 +221,12 @@ main {
 	z-index: 1;
 }
 
-#lesson-content {
+.lesson-content {
 	min-height: calc(100% - (2 * var(--border-width)));
 	border: var(--focus-border);
 	box-sizing: border-box;
 	overflow-x: hidden;
+	padding: 2rem;
 }
 
 #start-btn {
@@ -242,28 +245,34 @@ main {
 
 /* Structure: Choice */
 
-body.choice-view #lesson-content {
+body.choice-view .lesson-content {
 	position: absolute;
 	display: flex;
 	flex-direction: row;
-	gap: 2rem;
+	justify-content: center;
+	margin-left: -1rem;
+	margin-right: -1rem;
 	border: none;
 	width: max-content;
+	min-width: 100%;
 	height: calc(100% - (2 * var(--border-width)));
-	padding: 2rem;
+	padding: 0;
 }
 
-body.choice-view #lesson-content > * {
-	width: 25rem;
+body.choice-view .lesson-content > * {
+	width: 30rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
 	border: var(--focus-border);
+	box-sizing: border-box;
 }
 
-body.choice-view #lesson-content > section {
+body.choice-view .lesson-content > section {
 	cursor: pointer;
 }
 
-body.choice-view #lesson-content > section:hover,
-body.choice-view #lesson-content > section:active {
+body.choice-view .lesson-content > section:hover,
+body.choice-view .lesson-content > section:active {
 	background-color: var(--theme-color);
 	color: white;
 	transition: all ease-in-out 0.25s;
@@ -271,22 +280,28 @@ body.choice-view #lesson-content > section:active {
 
 /* Structure: Resource */
 
-body.resource-view #lesson-content {
+body.resource-view .lesson-content {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	min-width: 100%;
-	gap: 2rem 2rem;
+	margin: -1rem;
 	flex-wrap: wrap;
 	border: none;
 	width: 100%;
-	padding: 2rem;
+	padding: 0;
 }
 
-body.resource-view #lesson-content > * {
+body.resource-view .lesson-content > * {
 	width: 20rem;
 	height: 20rem;
+	margin: 1rem;
 	border: var(--focus-border);
+}
+
+/* Image popup*/
+#image-popup {
+	background-color: rgba(255,255,255,0.5);
 }
 
 /* Inner content styles */

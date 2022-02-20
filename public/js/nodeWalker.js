@@ -1,17 +1,5 @@
 import { NODE_FIELD_NAMES } from "./constants.js";
 
-/**
-* Append the current node in the nodeWalker instance
-* inside an exsisting html element.
-* @param {NodeWalker} nodeWalker
-* @param {HTMLElement} element 
-*/
-export function renderNodeWalker(nodeWalker, element) {
-	for (let child of nodeWalker.currentNode.childNodes) {
-		element.appendChild(child.cloneNode(true));
-	}
-}
-
 class NodeHistory {
 	constructor(root) {
 		this.root = root;
