@@ -4,9 +4,6 @@ require_relative './mappings.rb'
 
 class App < Sinatra::Base
 	include FORMATS
-	configure :production, :development do
-    enable :logging
-  end
 
 	set :upload_folder, 'uploads'
 	set :public_folder, 'public'
