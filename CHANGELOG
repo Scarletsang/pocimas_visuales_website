@@ -37,3 +37,11 @@ Before 14 February (Unrecorded date)
 - *Backend*:
   - FIXED BUG: Wrong return value of the get route that causes sinatra to interpret it as a rack respond, yielding an error to process it.
 	- Rendering changed so to adhere to the cache download media feature.
+
+21 February
+- *Frontend*:
+  - Added popup gallery image function. (tested)
+	- Added popup pdf function. (not yet tested)
+- *Backend*:
+  - Added markdown parsing for pdf
+	- Added popup container in haml for image and pdf popups.

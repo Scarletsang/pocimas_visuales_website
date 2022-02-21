@@ -40,6 +40,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		@block_parsers.unshift(:gallery_tag)
 		@block_parsers.unshift(:video_tag)
 		@block_parsers.unshift(:audio_tag)
+		@block_parsers.unshift(:pdf_tag)
 		@block_parsers.unshift(:section_tag)
 		@block_parsers.unshift(:left_section_tag)
 		@block_parsers.unshift(:right_section_tag)
@@ -55,38 +56,54 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		@tree.children << wrapper
 	end
 	
-	VIDEO_STRING = "[video:"
-	VIDEO_TAG_REGEX = /\[video\:\s*(.*)\]\(((?:\s*.*\.(?:mp4|webm|ogg)\,?)+)\)/
+	VIDEO_STRING = "["
+	VIDEO_TAG_REGEX = /\[\s*(.*)\s*\]\(((?:\s*video\/.*\.(?:mp4|webm|ogg)\,?)+)\)/
 
 	def parse_video_tag
 		@src.pos += @src.matched_size
 		wrapper = Element.new(:html_element, "video", controls: "")
 		@src.captures[1].split(',').each do |video_src|
-			video_format = video_src[/.*\.(.*)$/, 1]
+			video_format   = video_src[/.*\.(.*)$/, 1]
 			source_element = media_source(video_src, video_format, VIDEO_FORMAT)
 			wrapper.children << Element.new(:raw, source_element)
 		end
 		media_text = Element.new(:p, class: "media-text")
 		media_text.children << Element.new(:raw, @src.captures[0])
-		wrapper.children << media_text
-		@tree.children << wrapper
+		wrapper.children    << media_text
+		@tree.children      << wrapper
 	end
 	
-	AUDIO_STRING = "[audio:"
-	AUDIO_TAG_REGEX = /\[audio\:\s*(.*)\]\(((?:\s*.*\.(mp3|mp4|wav|webm|aac|flac|ogg)\,?)+)\)/
+	AUDIO_STRING = "["
+	AUDIO_TAG_REGEX = /\[\s*(.*)\s*\]\(((?:\s*audio\/.*\.(mp3|mp4|wav|webm|aac|flac|ogg)\,?)+)\)/
 	
 	def parse_audio_tag
 		@src.pos += @src.matched_size
 		wrapper = Element.new(:html_element, "audio", controls: "")
 		@src.captures[1].split(',').each do |audio_src|
-			audio_format = audio_src[/.*\.(.*)$/, 1]
+			audio_format   = audio_src[/.*\.(.*)$/, 1]
 			source_element = media_source(audio_src, audio_format, AUDIO_FORMAT)
 			wrapper.children << Element.new(:raw, source_element)
 		end
 		media_text = Element.new(:p,class: "media-text")
 		media_text.children << Element.new(:raw, @src.captures[0])
-		wrapper.children << media_text
-		@tree.children << wrapper
+		wrapper.children    << media_text
+		@tree.children      << wrapper
+	end
+	
+	PDF_STRING = "["
+	PDF_TAG_REGEX = /\[\s*(.*)\s*\]\(\s*(document\/.*\.pdf)\s*\)/
+	
+	def parse_pdf_tag
+		@src.pos += @src.matched_size
+		wrapper     = Element.new(:html_element, "section", class: "pdf-link", "data-href" => @src.captures[1])
+		instruction = Element.new(:p, class: "pdf-instruction")
+		pdf_title   = Element.new(:h1, class: "pdf-title")
+		instruction.chidlren << Element.new(:raw, "clique para ver PDF")
+		pdf_title.children   << Element.new(:raw, @src.captures[0])
+		wrapper.children     << instruction_text
+		wrapper.children     << pdf_text
+		@tree.chidlren       << wrapper
+		wrapper.chidlren     << instruction_text
 	end
 	
 	SECTION_STRING = "="
@@ -124,6 +141,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 	define_parser(:gallery_tag, GALLERY_TAG_REGEX, GALLERY_STRING)
 	define_parser(:video_tag, VIDEO_TAG_REGEX, VIDEO_STRING)
 	define_parser(:audio_tag, AUDIO_TAG_REGEX, AUDIO_STRING)
+	define_parser(:pdf_tag, PDF_TAG_REGEX, PDF_STRING)
 	define_parser(:section_tag, SECTION_TAG_REGEX, SECTION_STRING)
 	define_parser(:left_section_tag, LEFT_SECTION_TAG_REGEX, LEFT_SECTION_STRING)
 	define_parser(:right_section_tag, RIGHT_SECTION_TAG_REGEX, RIGHT_SECTION_STRING)

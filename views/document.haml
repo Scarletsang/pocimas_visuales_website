@@ -37,11 +37,12 @@
     %main.center-menu
       %button#next-lesson-btn{:type => "button"}
         %h1 Next Lesson
-    #image-popup.hide
-      %img#popup-image/
+    #popup.hide
+      %object#popup-pdf
+      %img#popup-image
       %p#popup-image-text
       %button#close-popup-btn{:type => "button"}
-        %img{:src => "/img/close-popup-btn.svg"}/
+        %img{:src => "img/close-popup-btn.svg"}/
     #cache{:style => "display: none;"}
     %template
       - nodes.each do |node|

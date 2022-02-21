@@ -111,6 +111,8 @@ button:hover, a:hover {
 .overflow-y-scroll { overflow-y: scroll; }
 .overflow-x-scroll { overflow-x: scroll; }
 
+/* side by side wiget (left and right tag) */
+
 .side-by-side {
 	display: flex;
 	flex-direction: row;
@@ -125,6 +127,8 @@ button:hover, a:hover {
 .right { order: 2 }
 .left  { order: 1 }
 
+/* gallery tag */
+
 .gallery {
 	display: flex;
 	flex-direction: row;
@@ -137,6 +141,66 @@ button:hover, a:hover {
 	width: 30%;
 	height: intrinsic;
 	margin: 1%;
+	cursor: pointer;
+}
+
+/* pdf tag */
+
+.pdf-link {
+	border: var(--focus-border);
+}
+
+.pdf-link:hover, .pdf-link:active {
+	background-color: var(--theme-color);
+	color: white;
+	transition: all ease-in-out 0.25s;
+}
+
+.pdf-instruction {
+	
+}
+
+.pdf-title {
+
+}
+
+/* Media popup*/
+
+#popup {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 3;
+}
+
+#popup-image, #popup-pdf {
+	width: 100%;
+	padding: 3rem calc(3rem + var(--border-width)) 0 calc(3rem + var(--border-width));
+	height: calc(100% - 6rem);
+	object-fit: contain;
+	box-sizing: border-box;
+}
+
+#popup-pdf {
+	height: 100vh;
+}
+
+#popup-image-text {
+	text-align: center;
+	margin-top: 0;
+	margin-right: var(--border-width);
+	color: white;
+	font: normal normal 1rem "Mali", sans-serif;
+}
+
+#close-popup-btn {
+	position: absolute;
+	top: var(--border-width);
+	right: var(--border-width);
+	width: 3rem;
 }
 
 /* nav bar highlight*/
@@ -297,11 +361,6 @@ body.resource-view .lesson-content > * {
 	height: 20rem;
 	margin: 1rem;
 	border: var(--focus-border);
-}
-
-/* Image popup*/
-#image-popup {
-	background-color: rgba(255,255,255,0.5);
 }
 
 /* Inner content styles */

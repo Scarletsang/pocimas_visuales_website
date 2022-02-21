@@ -34,3 +34,19 @@ export class MediaPreloader {
 		srcs.forEach(this.addImage);
 	}
 }
+
+export class Cache {
+	constructor() {
+		this.container = document.getElementById("cache");
+		this.cachedNodes = new Set();
+	}
+
+	add(node) {
+		this.container.appendChild(node);
+		this.cachedNodes.add(node);
+	}
+
+	contains(node) {
+		this.cachedNodes.has(node);
+	}
+}

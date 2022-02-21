@@ -76,8 +76,10 @@ function resourcePage(lastId, ref) {
 ////////////////////////////////////
 
 function lessonPageBase(lastId, ref) {
-  lessonPageStyles(ref);
+  let nodeHasCached = ref.cache.contains(ref.nodeWalker.currentNode);
   lessonPageContent(ref);
+  if (!nodeHasCached) addClickableElementsEventListeners(ref);
+  lessonPageStyles(ref);
   preloadNextLessonMedia(ref);
   ref.lessonList.usePrefix = true;
   lessonPageNav(ref);
@@ -123,10 +125,19 @@ function lessonPageNav(ref) {
 }
 
 function clearLessonContent(ref) {
-  let cache = document.getElementById("cache");
   let lessonContents = ref.main.getElementsByTagName("section");
   for (let content of lessonContents) {
-    cache.appendChild(content);
+    ref.cache.add(content);
+  }
+}
+
+function addClickableElementsEventListeners(ref) {
+  let node = ref.nodeWalker.currentNode;
+  for (let gallery of node.getElementsByClassName("gallery")) {
+    galleryElement(gallery, ref);
+  }
+  for (let pdf of node.getElementsByClassName("pdf-link")) {
+    pdfElement(pdf, ref);
   }
 }
 
@@ -156,7 +167,39 @@ function choicePageCLickableSections(ref) {
 
 ////////////////////////////////////
 /////  Button's event attacher /////
-//////////////////////////////////// 
+////////////////////////////////////
+
+function getPopupElements() {
+  return [
+    document.getElementById("popup-pdf"),
+    document.getElementById("popup-image"),
+    document.getElementById("popup-image-text")
+  ]
+}
+
+function galleryElement(element, ref) {
+  let [pdf, image, imageText] = getPopupElements();
+  element.addEventListener("click", (event) => {
+    image.setAttribute("src", event.target.getAttribute("src"));
+    imageText.innerHTML = event.target.getAttribute("alt");
+    ref.popup.classList.remove("hide");
+    pdf.classList.add("hide");
+    image.classList.remove("hide");
+    imageText.classList.remove("hide");
+  });
+}
+
+function pdfElement(element, ref) {
+  let [pdf, image, imageText] = getPopupElements();
+  element.addEventListener("click", (event) => {
+    pdf.setAttribute("type", "application/pdf");
+    pdf.setAttribute("data", element.getAttribute("data-href"));
+    ref.popup.classList.remove("hide");
+    pdf.classList.remove("hide");
+    image.classList.add("hide");
+    imageText.classList.add("hide");
+  });
+}
 
 export function iconButton(elementId, ref) {
   document.getElementById(elementId).addEventListener("click", (event) => {
@@ -177,5 +220,11 @@ export function nextLessonButton(elementId, ref) {
       let nextNodeId = ref.nodeWalker.nextIds()[0];
       window.location.hash = `#${nextNodeId}`;
     }
+  });
+}
+
+export function closePopupButton(elementId, ref) {
+  document.getElementById(elementId).addEventListener("click", (event) => {
+    ref.popup.classList.add("hide");
   });
 }
