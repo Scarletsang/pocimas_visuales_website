@@ -45,3 +45,9 @@ Before 14 February (Unrecorded date)
 - *Backend*:
   - Added markdown parsing for pdf
 	- Added popup container in haml for image and pdf popups.
+
+22 February
+- *Frontend*:
+  - complete most css styles, including showing pdf
+- *Backend*:
+  - Finished debugging parsing for pdf tag in markdown.

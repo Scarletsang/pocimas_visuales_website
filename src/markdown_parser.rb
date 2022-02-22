@@ -56,8 +56,8 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		@tree.children << wrapper
 	end
 	
-	VIDEO_STRING = "["
-	VIDEO_TAG_REGEX = /\[\s*(.*)\s*\]\(((?:\s*video\/.*\.(?:mp4|webm|ogg)\,?)+)\)/
+	VIDEO_STRING = "!["
+	VIDEO_TAG_REGEX = /\!\[\s*(.*)\s*\]\(((?:\s*video\/.*\.(?:mp4|webm|ogg)\,?)+)\)/
 
 	def parse_video_tag
 		@src.pos += @src.matched_size
@@ -73,8 +73,8 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		@tree.children      << wrapper
 	end
 	
-	AUDIO_STRING = "["
-	AUDIO_TAG_REGEX = /\[\s*(.*)\s*\]\(((?:\s*audio\/.*\.(mp3|mp4|wav|webm|aac|flac|ogg)\,?)+)\)/
+	AUDIO_STRING = "!["
+	AUDIO_TAG_REGEX = /\!\[\s*(.*)\s*\]\(((?:\s*audio\/.*\.(mp3|mp4|wav|webm|aac|flac|ogg)\,?)+)\)/
 	
 	def parse_audio_tag
 		@src.pos += @src.matched_size
@@ -90,20 +90,19 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		@tree.children      << wrapper
 	end
 	
-	PDF_STRING = "["
-	PDF_TAG_REGEX = /\[\s*(.*)\s*\]\(\s*(document\/.*\.pdf)\s*\)/
+	PDF_STRING = "!["
+	PDF_TAG_REGEX = /\!\[\s*(.*)\s*\]\(\s*(document\/.*\.pdf)\s*\)/
 	
 	def parse_pdf_tag
 		@src.pos += @src.matched_size
-		wrapper     = Element.new(:html_element, "section", class: "pdf-link", "data-href" => @src.captures[1])
+		wrapper     = Element.new(:html_element, "section", class: "pdf-link", :"data-href" => @src.captures[1])
 		instruction = Element.new(:p, class: "pdf-instruction")
-		pdf_title   = Element.new(:h1, class: "pdf-title")
-		instruction.chidlren << Element.new(:raw, "clique para ver PDF")
+		pdf_title   = Element.new(:html_element, "h1", class: "pdf-title")
+		instruction.children << Element.new(:raw, "clique para ver PDF")
 		pdf_title.children   << Element.new(:raw, @src.captures[0])
-		wrapper.children     << instruction_text
-		wrapper.children     << pdf_text
-		@tree.chidlren       << wrapper
-		wrapper.chidlren     << instruction_text
+		wrapper.children     << instruction
+		wrapper.children     << pdf_title
+		@tree.children       << wrapper
 	end
 	
 	SECTION_STRING = "="
