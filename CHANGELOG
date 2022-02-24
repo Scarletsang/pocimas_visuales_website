@@ -51,3 +51,7 @@ Before 14 February (Unrecorded date)
   - complete most css styles, including showing pdf
 - *Backend*:
   - Finished debugging parsing for pdf tag in markdown.
+
+24 February
+- *Frontend*:
+  - Refactored code for rendering different page structures. Each structure is now defined in a seperate class. A new structure just requires one to add a new class and add it to the route function.

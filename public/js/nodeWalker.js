@@ -116,6 +116,16 @@ export class NodeWalker {
 		return this.currentNode.getAttribute(this.fieldNameForNextNode).split(',');
 	}
 
+	nextIdsOf(nodeId) {
+		let clone = this.clone();
+		let arr = [];
+		clone.teleport(nodeId);
+		clone.nextIds().forEach(id => {
+			arr.push(clone.hash.get(id));
+		})
+		return arr;
+	}
+
 	/**
 	 * Runs the iterator repeatedly until no node is found or multiple
 	 * nodes are found to be connected to the current node.
