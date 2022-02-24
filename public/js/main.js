@@ -29,7 +29,7 @@ function main(event) {
     }
   }, browserSupportsPassiveEvent ? {passive: true} : false);
   Render.startButton("start-btn", ref);
-  Render.iconButton("website-title", ref);
+  Render.iconButton("website-icon-image", ref);
   Render.nextLessonButton("next-lesson-btn", ref);
   Render.closePopupButton("close-popup-btn", ref);
 }

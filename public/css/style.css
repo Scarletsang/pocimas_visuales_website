@@ -96,10 +96,10 @@ button:hover, a:hover {
 .center-menu {
 	position: absolute;
 	top: 50%;
-	left: 50%;
+	left: var(--border-width);
 	margin: 0;
 	padding: 1.5ex 3rem;
-	transform: translate(-50%, -50%);
+	transform: translateY(-50%);
 	width: 25rem;
 	height: 35rem;
 	box-sizing: border-box;
@@ -215,13 +215,13 @@ body.main-view {
 	display: block;
 }
 
-body.main-view #website-title {
-	pointer-events: none;
+body.main-view #website-icon-image {
+	display: none;
 }
 
-body.main-view > nav {
-	left: 50%;
-	transform: translate(-50%, -50%);
+body.main-view #website-icon-text {
+	display: block;
+	margin-bottom: 2rem;
 }
 
 body.main-view nav a {
@@ -237,6 +237,31 @@ body.main-view .lesson-content {
 	width: 100%;
 	margin: 0;
 	box-sizing: border-box;
+}
+
+body.main-view #cover {
+	display: block;
+}
+
+#website-icon-text h1:nth-child(1) {
+	font-size: 3rem;
+	margin-bottom: 0;
+}
+
+#website-icon-text h1:nth-child(2) {
+	font-size: 1rem;
+}
+
+#website-icon-text hr:nth-child(3) {
+	margin-bottom: 0;
+	margin-top: 24px;
+	border: 1px solid var(--theme-color);
+}
+
+#website-icon-text h1:nth-child(4) {
+	margin: 0;
+	font-size: 1rem;
+	font-style: italic;
 }
 
 body.main-view #start-btn {
@@ -301,7 +326,37 @@ main {
 	max-width: 60rem;
 }
 
+#cover {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	height: 100vh;
+	width: calc(100vw - var(--border-width) - 27rem);
+	padding-left: calc(var(--border-width) + 27rem);
+	object-fit: contain;
+	transform: translateY(-50%);
+	box-sizing: content-box;
+}
+
 #start-btn {
+	display: none;
+}
+
+#website-icon-image {
+	display: block;
+	width: 10rem;
+	height: 10rem;
+	margin-bottom: 2rem;
+	cursor: pointer;
+	background: url("../img/logo_01.svg") no-repeat;
+}
+
+#website-icon-image:hover, #website-icon-image:active {
+	background: url("../img/logo_02.svg") no-repeat;
+}
+
+#website-icon-text {
 	display: none;
 }
 
@@ -379,6 +434,7 @@ main p {
 	padding: 1rem 0;
 	margin: 0;
 	box-sizing: content-box;
+	align-self: flex-start;
 }
 
 main video {
