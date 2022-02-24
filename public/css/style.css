@@ -16,7 +16,7 @@ nav * {
 	font: normal 600 1.25rem "Mali", sans-serif;
 }
 
-p {
+p, li {
 	font: normal 500 1rem "Mali", sans-serif;
 }
 
@@ -312,7 +312,7 @@ main {
 }
 
 .lesson-content {
-	min-height: calc(100% - (2 * var(--border-width)));
+	min-height: 100%;
 	border: var(--focus-border);
 	box-sizing: border-box;
 	overflow-x: hidden;
@@ -323,6 +323,7 @@ main {
 }
 
 .lesson-content > * {
+	width: 100%;
 	max-width: 60rem;
 }
 
@@ -434,7 +435,6 @@ main p {
 	padding: 1rem 0;
 	margin: 0;
 	box-sizing: content-box;
-	align-self: flex-start;
 }
 
 main video {
