@@ -422,21 +422,23 @@ body.choice-view .lesson-content img {
 	object-fit: contain;
 }
 
+body.choice-view .lesson-content > section > * {
+	display: none;
+}
+
+body.choice-view .lesson-content > section:hover > * {
+	display: block;
+}
+
 body.choice-view .lesson-content > section:hover img,
 body.choice-view .lesson-content > section:hover h1,
 body.choice-view .lesson-content > section:hover p:nth-child(2) {
 	display: none;
 }
 
-body.choice-view .lesson-content p {
-	display: none;
-}
-
+body.choice-view .lesson-content img,
+body.choice-view .lesson-content h1,
 body.choice-view .lesson-content p:nth-child(2) {
-	display: block;
-}
-
-body.choice-view .lesson-content > section:hover p {
 	display: block;
 }
 
