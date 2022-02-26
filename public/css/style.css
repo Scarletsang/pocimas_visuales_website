@@ -222,6 +222,7 @@ body.main-view #website-icon-text {
 
 body.main-view nav a {
 	color: var(--theme-color);
+	margin-bottom: 1.5rem;
 }
 
 body.main-view nav a:hover {
