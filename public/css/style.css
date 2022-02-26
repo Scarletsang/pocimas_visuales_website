@@ -143,6 +143,7 @@ button:hover, a:hover {
 
 .pdf-link {
 	border: var(--focus-border);
+	border-style: dashed;
 	cursor: pointer;
 }
 
@@ -468,6 +469,7 @@ body.resource-view .lesson-content > * {
 	width: 18rem;
 	height: 18rem;
 	margin: 1rem;
+	padding: 2rem;
 	border: var(--focus-border);
 }
 

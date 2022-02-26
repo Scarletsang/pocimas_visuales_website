@@ -130,7 +130,7 @@ class ElementRenderer {
 		let [pdf, image, imageText] = this.getPopupElements();
 		node.addEventListener("click", (event) => {
 			pdf.setAttribute("type", "application/pdf");
-			pdf.setAttribute("data", element.getAttribute("data-href"));
+			pdf.setAttribute("data", node.getAttribute("data-href"));
 			this.ref.popup.classList.remove("hide");
 			pdf.classList.remove("hide");
 			image.classList.add("hide");
