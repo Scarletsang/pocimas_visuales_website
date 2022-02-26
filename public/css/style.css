@@ -56,10 +56,6 @@ img {
 	max-width: 100%;
 }
 
-/* a:visited {
-	color: unset;
-} */
-
 button:hover, a:hover {
 	color: var(--highlight-color);
 }
@@ -226,6 +222,10 @@ body.main-view #website-icon-text {
 
 body.main-view nav a {
 	color: var(--theme-color);
+}
+
+body.main-view nav a:hover {
+	color: var(--highlight-color);
 }
 
 body.main-view > main {
