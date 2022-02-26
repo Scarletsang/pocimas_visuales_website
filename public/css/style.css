@@ -373,8 +373,11 @@ main {
 
 /* Structure: Choice */
 
+body.choice-view main {
+	padding-bottom: var(--border-width);
+}
+
 body.choice-view .lesson-content {
-	position: absolute;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -384,8 +387,9 @@ body.choice-view .lesson-content {
 	border: none;
 	width: max-content;
 	min-width: 100%;
-	height: calc(100% - (2 * var(--border-width)));
+	height: 100%;
 	padding: 0;
+	overflow-y: hidden;
 }
 
 body.choice-view .lesson-content > * {
@@ -398,8 +402,19 @@ body.choice-view .lesson-content > * {
 }
 
 body.choice-view .lesson-content > section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	cursor: pointer;
 	padding: 3rem;
+}
+
+body.choice-view .lesson-content p {
+	width: 100%;
+}
+
+body.choice-view .lesson-content img {
+	height: 30%;
 }
 
 body.choice-view .lesson-content > section:hover,
