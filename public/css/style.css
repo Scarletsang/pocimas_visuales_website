@@ -474,7 +474,12 @@ body.resource-view .lesson-content > * {
 
 body.cinema-view nav {
 	top: 0;
+	left: 0;
 	transform: translate(0, 0);
+}
+
+body.cinema-view #website-icon-image {
+	width: 6rem;
 }
 
 body.cinema-view main {
