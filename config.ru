@@ -1,4 +1,4 @@
-#\ -s Thin
+#\ -s puma
 require_relative 'src/app.rb'
 
 # Run Server

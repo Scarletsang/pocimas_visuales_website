@@ -13,7 +13,7 @@ class App < Sinatra::Base
 		Document.from_yaml(UPLOAD_FOLDER + "config.yaml").render
 	end
 
-	get /\/(image|audio|video|document)\/(.*\.([a-zA-Z0-9]*))/ do
+	get /\/(image|audio|video|document)\/(.*\.([a-zA-Z0-9]+))/ do
 		media_type = params['captures'][0]
 		media_formats = MEDIA_FORMATS[media_type]
 		mime_type = media_formats[params['captures'][2]]
