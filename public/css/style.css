@@ -81,7 +81,7 @@ button:hover, a:hover {
 }
 
 .poetic-title, main h2 {
-	font: 4rem "Indie Flower", sans-serif;
+	font: 3rem "Indie Flower", sans-serif;
 }
 
 .poetic-p {
@@ -399,6 +399,7 @@ body.choice-view .lesson-content > * {
 
 body.choice-view .lesson-content > section {
 	cursor: pointer;
+	padding: 3rem;
 }
 
 body.choice-view .lesson-content > section:hover,

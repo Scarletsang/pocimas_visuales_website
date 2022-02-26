@@ -115,11 +115,11 @@ class ElementRenderer {
 	}
 
 	gallery(node) {
-		let [pdf, image, imageText] = getPopupElements();
+		let [pdf, image, imageText] = this.getPopupElements();
 		node.addEventListener("click", (event) => {
 			image.setAttribute("src", event.target.getAttribute("src"));
 			imageText.innerHTML = event.target.getAttribute("alt");
-			ref.popup.classList.remove("hide");
+			this.ref.popup.classList.remove("hide");
 			pdf.classList.add("hide");
 			image.classList.remove("hide");
 			imageText.classList.remove("hide");
@@ -127,11 +127,11 @@ class ElementRenderer {
 	}
 
 	pdf(node) {
-		let [pdf, image, imageText] = getPopupElements();
+		let [pdf, image, imageText] = this.getPopupElements();
 		node.addEventListener("click", (event) => {
 			pdf.setAttribute("type", "application/pdf");
 			pdf.setAttribute("data", element.getAttribute("data-href"));
-			ref.popup.classList.remove("hide");
+			this.ref.popup.classList.remove("hide");
 			pdf.classList.remove("hide");
 			image.classList.add("hide");
 			imageText.classList.add("hide");

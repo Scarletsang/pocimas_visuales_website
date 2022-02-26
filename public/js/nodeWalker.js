@@ -4,15 +4,19 @@ class NodeHistory {
 	constructor(root) {
 		this.root = root;
 		this.record = [];
-		this.choices = [];
+		this._choices = [];
 	}
 
-	get() {
-		return this.record;
+	get choices() {
+		return this._choices
 	}
 
-	getChoice() {
-		return this.choices;
+	set choices(array) {
+		this._choices = array;
+	}
+
+	addChoice(nodeId) {
+		this.choices.push(nodeId);
 	}
 
 	add(nodeId) {
@@ -31,10 +35,6 @@ class NodeHistory {
 		else {
 			this.record.push(nodeId);
 		}
-	}
-
-	addChoice(nodeId) {
-		this.choices.push(nodeId);
 	}
 
 	clone() {
