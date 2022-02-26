@@ -20,7 +20,6 @@ class App < Sinatra::Base
 		halt 404 if mime_type.nil?
 		file = File.expand_path("#{media_type}/#{params['captures'][1]}", settings.upload_folder)
 		halt 404 unless File.exist? file
-		logger.info file
 		send_file file,
 			:type => mime_type,
 			:disposition => 'inline'
