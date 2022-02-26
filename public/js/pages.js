@@ -18,7 +18,8 @@ function router(lastId, ref) {
     "content": ContentPage,
     "choice": ChoicePage,
     "resource": ResourcePage,
-    "info": InfoPage
+    "info": InfoPage,
+    "cinema": CinemaPage
   }
   let structureType = ref.nodeWalker.currentNode.getAttribute("structure");
   if (!structureType) console.error(`There is no structure attribute defined on this node. Node id: ${ref.nodeWalker.currentId}`);
@@ -89,12 +90,25 @@ class InfoPage extends PageRenderer {
     this.verticalScroll();
     this.ref.nextLessonButton.classList.add("hide");
   }
-
+  
   renderNav() {
     let nodeArray = this.ref.nodeWalker.nextIdsOf(ENTRY_NODE_ID);
     nodeArray.splice(-1);
     this.ref.lessonList.usePrefix = false;
     this.renderNavFrom(nodeArray);
+  }
+}
+
+class CinemaPage extends PageRenderer {
+  renderStyles() {
+    this.defaultStyles();
+    this.verticalScroll();
+    this.defaultNextLessonBtnStyles();
+    this.ref.body.classList.add("cinema-view");
+  }
+
+  renderNav() {
+    this.ref.lessonList.clear();
   }
 }
 
