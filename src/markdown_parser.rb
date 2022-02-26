@@ -98,7 +98,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 		wrapper     = Element.new(:html_element, "section", class: "pdf-link", :"data-href" => @src.captures[1])
 		instruction = Element.new(:p, class: "pdf-instruction")
 		pdf_title   = Element.new(:html_element, "h1", class: "pdf-title")
-		instruction.children << Element.new(:raw, "clique para ver PDF")
+		instruction.children << Element.new(:raw, "PDF")
 		pdf_title.children   << Element.new(:raw, @src.captures[0])
 		wrapper.children     << instruction
 		wrapper.children     << pdf_title
