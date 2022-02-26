@@ -180,7 +180,10 @@ export class NodeWalker {
 	 */
 	next(nextId = null) {
 		if (this.isEndNode) return false;
-		if (this.isChoiceNode) return this.teleport(nextId);
+		if (this.isChoiceNode) {
+			if (!this.nextIds().includes(nextId)) return false;
+			return this.teleport(nextId);
+		}
 		return this.teleport(this.nextIds()[0]);
 	}
 	
