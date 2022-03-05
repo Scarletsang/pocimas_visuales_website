@@ -9,7 +9,7 @@ class App < Sinatra::Base
 	set :public_folder, 'public'
 	set :views, 'views'
 
-	get '/' do
+	get '/dev' do
 		Document.from_yaml(UPLOAD_FOLDER + "config.yaml").render
 	end
 
