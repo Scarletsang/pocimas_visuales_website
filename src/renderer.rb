@@ -1,12 +1,10 @@
 require 'yaml'
 require 'haml'
 require_relative 'markdown_parser.rb'
-
-UPLOAD_FOLDER = "uploads/"
-VIEWS_FOLDER = "views/"
-MARKDOWN_FOLDER = "#{UPLOAD_FOLDER}markdown/"
+require_relative 'paths.rb'
 
 class Document
+	include Paths
 	attr_reader :hash
 	def initialize(hash)
 		@haml = VIEWS_FOLDER + "document.haml"
@@ -14,7 +12,7 @@ class Document
 	end
 
 	def change_hash
-		yaml = File.read(UPLOAD_FOLDER + "nodes.yaml")
+		yaml = File.read(NODES_CONNECTION_YAML)
 		raw_nodes = YAML.load(yaml)
 		nodes = []
 		raw_nodes.each do |node_id, node_meta|
@@ -39,6 +37,7 @@ class Document
 end
 
 class Node
+	include Paths
 	def initialize(hash)
 		@haml = VIEWS_FOLDER + "node.haml"
 		@hash = hash
@@ -69,4 +68,14 @@ module UnStructureContent
 		}
 		Kramdown::Document.new(input_text, options).to_html
 	end
+end
+
+def pre_render(dest_folder, website_meta_yaml)
+	rendered = Document.from_yaml(website_meta_yaml).render
+	Dir.chdir(dest_folder) do
+		html = File.new("index.html", "w")
+		html.puts rendered
+	end
+	puts "Successfully pre-rendered index.html in the folder #{File.expand_path(dest_folder, Dir.pwd)}!"
+	File.expand_path("index.html", dest_folder)
 end

@@ -22,10 +22,35 @@ Lines, lines and lines. I initially thought of making the website looks like a p
 
 ## Chapter 3: Technical Details
 
-This website is written in Ruby and runs on the framework *Sinatra*. To start the server, run the following:
+To install dependencies, run:
+
+```
+bundler install
+npm install
+```
+
+This website is written in Ruby and runs on the framework *Sinatra*. To start the server, run one of the following depending on the development or production environment:
 
 ```
 rackup -p <port>
+rackup -p <port> -E production
 ```
 
-At the moment of writing this note, there are no content management system installed, but a yaml parser (for meta info) and a markdown parser to manage the content.
+Running the server in production will precompile all the html, css, javascripts with couple of ui images into a folder called `/dist`. The index.html is precompiled using haml and the other static files are packed using the rollup javascript library. 
+
+In development, the website is rendered dynamically, for faster development.
+
+### Content Management
+
+The contents are managed using markdown documents. Each document represents one node(page) in the website.
+
+```markdown
+./uploads
+|-- nodes.yaml   Defines the connections of the nodes
+|-- config.yaml  Defines the meta info of the website
+|-- markdown/    Contains all the nodes that represents each page in the website.
+|-- image/       Contains all the images used inside the nodes
+|-- document/    Contains all the pdf or text documents used inside the nodes
+```
+
+Currently they are edited manually. In the near future, a program with its corresponding API will be created for managing this markdown content management system. Proper documentation will be written by then.

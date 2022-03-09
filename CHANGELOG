@@ -55,3 +55,7 @@ Before 14 February (Unrecorded date)
 24 February
 - *Frontend*:
   - Refactored code for rendering different page structures. Each structure is now defined in a seperate class. A new structure just requires one to add a new class and add it to the route function.
+
+9 March
+- *Backend*:
+  - reorganizes the server code to be split into production and development mode. In production mode, precompilation of the whole site is done using HAML precompiled together with rollup js for bundling up all its relavant files to be hosted statically.
