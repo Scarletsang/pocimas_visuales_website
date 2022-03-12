@@ -1,5 +1,4 @@
-import { NODE_FIELD_NAMES } from "./constants.js";
-import EventDispatcher from "./eventDispatcher.js";
+import store, { NODE_FIELD_NAMES } from "./store.js";
 
 class NodeHistory {
   constructor(root) {
@@ -93,7 +92,7 @@ class NodeMap {
   }
 
   nextNodesOf(nodeId) {
-    let nodesArray = this.nextIds(nodeId)?.map(id => this.map.get(id));
+    let nodesArray = this.nextIdsOf(nodeId)?.map(id => this.map.get(id));
     return nodesArray;
   }
 }
@@ -103,17 +102,18 @@ class NodeMap {
  * that tranverse from a HTML sections to another one. A Node here 
  * referes to each HTML section that one is walking through.
  */
-export class NodeWalker {
+export default class NodeWalker {
   /**
    * @param {NodeList} nodes 
    * @param {String} fieldName
    * @param {String} id 
    */
-  constructor(startId, nodeMap, history, eventDispatcher = new EventDispatcher(this)) {
+  constructor(startId, nodeMap, history, eventDispatcher) {
     this._currentId = startId;
     this.nodeMap = nodeMap;
     this.history = history;
     this.eventDispatcher = eventDispatcher;
+    if (eventDispatcher) store.set("eventDispatcher", eventDispatcher);
   }
 
   get currentId()        {return this._currentId; }
@@ -135,7 +135,8 @@ export class NodeWalker {
     let nodes = document.getElementsByTagName("template")[0].content.childNodes;
     let nodeMap = new NodeMap(nodes);
     let history = new NodeHistory(startId);
-    return new NodeWalker(startId, nodeMap, history);
+    let eventDispatcher = store.get("eventDispatcher");
+    return new NodeWalker(startId, nodeMap, history, eventDispatcher);
   }
 
   clone() {
@@ -152,12 +153,11 @@ export class NodeWalker {
    */
   next(nextId = null) {
     if (this.isEndNode) return false;
-    let nextIds = this.nextIds();
     if (this.isChoiceNode) {
-      if (nextIds?.includes(nextId)) return this.teleport(nextId);
+      if (this.nextIds?.includes(nextId)) return this.teleport(nextId);
       return false;
     }
-    return this.teleport(nextIds[0]);
+    return this.teleport(this.nextIds?.at(0));
   }
   
   teleport(destId) {

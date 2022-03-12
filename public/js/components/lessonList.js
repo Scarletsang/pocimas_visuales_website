@@ -1,7 +1,7 @@
-import { LitElement, css, html} from 'https://unpkg.com/lit-element@3.2.0/lit-element.js?module';
-import { ENTRY_NODE_ID, nodeWalker } from "../store.js";
-import { hashChangeEvent } from "../eventDispatcher.js";
-import controlledByEvent from './componentController.js';
+import { LitElement, css, html} from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import { ENTRY_NODE_ID } from "../store.js";
+import ComponentController from './componentController.js';
 
 export default class LessonList extends LitElement {
   
@@ -18,6 +18,7 @@ export default class LessonList extends LitElement {
       display: block;
       margin: 0.5rem 0;
       color: var(--light-theme-color);
+      text-decoration: none;
     }
 
     a.highlight {color: var(--theme-color);}
@@ -59,15 +60,16 @@ export default class LessonList extends LitElement {
   }
 }
 
-class LessonListController extends controlledByEvent(hashChangeEvent, "lessonListComponent"){
+class LessonListController extends ComponentController {
   lessons;
   constructor(host) {
     super(host)
+    this.lessons = [];
   }
 
   callback() {
-    this.host.currentNodeId  = nodeWalker.currentId;
-    this.host.outerStructure = nodeWalker.currentStructure;
+    this.host.currentNodeId  = this.nodeWalker.currentId;
+    this.host.outerStructure = this.nodeWalker.currentStructure;
     switch (this.host.outerStructure) {
       case "info":
         this.infoPage();
@@ -81,24 +83,24 @@ class LessonListController extends controlledByEvent(hashChangeEvent, "lessonLis
   }
 
   infoPage() {
-    let nodeArray = nodeWalker.nextIdsOf(ENTRY_NODE_ID);
+    let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(ENTRY_NODE_ID);
     nodeArray.splice(-1);
     this.lessons = nodeArray;
     this.host.usePrefix = false;
   }
 
   homePage() {
-    let nodeArray = nodeWalker.nextIdsOf(ENTRY_NODE_ID);
+    let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(ENTRY_NODE_ID);
     nodeArray.splice(-1);
 		this.lessons = nodeArray;
 		this.host.usePrefix = false;
   }
 
   contentPage() {
-    let nodeArray = nodeWalker.wanderFromTo(ENTRY_NODE_ID, nodeWalker.currentId);
-    let nodeArray2 = nodeWalker.wanderTillNodeChoice();
+    let nodeArray = this.nodeWalker.wanderFromTo(ENTRY_NODE_ID, this.nodeWalker.currentId);
+    let nodeArray2 = this.nodeWalker.wanderTillNodeChoice();
     //slice to prevent showing entry node in the navigation bar.
-    this.lessons = [...nodeArray.slice(1), ...nodeArray2];
+    this.lessons = nodeArray ? [...nodeArray.slice(1), ...nodeArray2] : nodeArray2 ;
     this.host.usePrefix = true;
   }
 }

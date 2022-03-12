@@ -1,8 +1,7 @@
 export default class EventDispatcher {
-  constructor(nodeWalker) {
+  constructor() {
     this._events = [];
     this._unresolved = new Map();
-    this.nodeWalker = nodeWalker;
   }
 
   append(id, func) {
@@ -55,7 +54,7 @@ export default class EventDispatcher {
   }
 
   dispatch() {
-    this._events.forEach(({id, func}) => {func(this.nodeWalker);});
+    this._events.forEach(({id, func}) => func() );
   }
 
 }

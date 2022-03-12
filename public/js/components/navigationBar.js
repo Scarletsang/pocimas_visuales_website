@@ -1,11 +1,10 @@
-import { LitElement, css, html} from 'https://unpkg.com/lit-element@3.2.0/lit-element.js?module';
-import { nodeWalker, ENTRY_NODE_ID } from "../store.js";
-import { hashChangeEvent } from "../eventDispatcher.js";
-import controlledByEvent from './componentController.js';
+import { LitElement, css, html} from 'lit';
+import { ENTRY_NODE_ID } from "../store.js";
+import ComponentController from './componentController.js';
 
 export default class NavigationBar extends LitElement {
 
-  controller = new NavigationBarController(this);
+  event = new NavigationBarController(this);
 
   static properties = {
     outerStructure: {reflect: true}
@@ -14,6 +13,7 @@ export default class NavigationBar extends LitElement {
   static styles = css`
     :host {
       width: var(--nav-width);
+      border: none;
       height: 35rem;
       padding: 1.5ex 0;
       display: flex;
@@ -32,11 +32,11 @@ export default class NavigationBar extends LitElement {
       height: 10rem;
       margin-bottom: 2rem;
       cursor: pointer;
-      background: url("../img/logo_01.svg") no-repeat;
+      background: url("/img/logo_01.svg") no-repeat;
     }
 
     #website-icon-image:hover, #website-icon-image:active {
-      background: url("../img/logo_02.svg") no-repeat;
+      background: url("/img/logo_02.svg") no-repeat;
     }
 
     #website-icon-text {
@@ -69,10 +69,15 @@ export default class NavigationBar extends LitElement {
       display: block;
       justify-self: end;
       margin-top: auto;
+      border: none;
+      color: var(--theme-color);
+      background-color: transparent;
+      cursor: pointer;
     }
   `
 
   homePage() {
+    console.log(this);
     return html`
       <div id="website-icon-text">
         <h1>Pócima Visual 02_</h1>
@@ -81,7 +86,7 @@ export default class NavigationBar extends LitElement {
         <h1>Escuela de espiritismo tecnológico</h1>
       </div>
       <lesson-list></lesson-list>
-      <button id="start-btn" type="button" @click="${this.controller.startBtn}">
+      <button id="start-btn" type="button" @click="${this.event.startBtn}">
         <h1>comenzar</h1>
       </button>
     `
@@ -89,13 +94,13 @@ export default class NavigationBar extends LitElement {
 
   cinemaPage() {
     return html`
-      <div @click="${this.controller.iconBtn}" id="website-icon-image"></div>
+      <div @click="${this.event.iconBtn}" id="website-icon-image"></div>
     `
   }
 
   contentPage() {
     return html`
-      <div @click="${this.controller.iconBtn}" id="website-icon-image"></div>
+      <div @click="${this.event.iconBtn}" id="website-icon-image"></div>
       <lesson-list></lesson-list>
     `
   }
@@ -112,18 +117,14 @@ export default class NavigationBar extends LitElement {
   }
 }
 
-
-class NavigationBarController extends controlledByEvent(hashChangeEvent, "navigationBarComponent") {
-  constructor(host) {
-    super(host);
-  }
+class NavigationBarController extends ComponentController {
 
   callback() {
-    this.host.outerStructure = nodeWalker.currentStructure;
+    this.host.outerStructure = this.nodeWalker.currentStructure;
   }
 
   startBtn() {
-    let nextIds = nodeWalker.nextIds();
+    let nextIds = this.nodeWalker.nextIds();
     let startNodeId = nextIds[nextIds.length - 1];
     window.location.hash = `#${startNodeId}`;
   }

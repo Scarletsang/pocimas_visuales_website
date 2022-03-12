@@ -1,18 +1,23 @@
-export default function controlledByEvent(eventSerielizer, componentName) {
-  return class ComponentController {
-    host;
-    constructor(host) {
-      (this.host = host).addController(this);
-    }
+import store from "../store.js";
+import { generateUID } from "../helpers.js"
 
-    callback(event) {throw "callback not implemented.";}
+export default class ComponentController {
+  constructor(host) {
+    (this.host = host).addController(this);
+    this.id = generateUID();
+    this.nodeWalker = store.get("nodeWalker");
+    this.eventDispatcher = store.get("eventDispatcher");
+  }
 
-    hostConnected() {
-      eventSerielizer.append(componentName, this.callback);
-    }
+  callback() {throw "callback not implemented.";}
+  
+  hostConnected() {
+    let func = () => {this.callback.call(this)}
+    this.eventDispatcher.append(this.id, func);
+    this.callback();
+  }
 
-    hostDisconnected() {
-      eventSerielizer.delete(componentName);
-    }
+  hostDisconnected() {
+    this.eventDispatcher.delete(this.id);
   }
 }
