@@ -1,4 +1,4 @@
-import { NODE_FIELD_NAMES } from "./constants.js";
+import { NODE_FIELD_NAMES } from "../store.js";
 
 /**
  * An interface to dynamically create and manipulate the navigation bar
