@@ -1,5 +1,4 @@
 require 'sinatra'
-require_relative 'renderer.rb'
 require_relative 'mappings.rb'
 require_relative 'paths.rb'
 
@@ -13,10 +12,6 @@ class App < Sinatra::Base
 
 	configure :production do
 		set :public_folder, DIST_FOLDER
-
-		html_path = pre_render(PUBLIC_FOLDER, WEBSITE_META_YAML)
-		system("rollup -c")
-		File.delete(html_path) if File.exist?(html_path)
 		
 		get '/' do
 			send_file File.expand_path("index.html", DIST_FOLDER)
@@ -24,11 +19,12 @@ class App < Sinatra::Base
 	end
 	
 	configure :development do
-		set :public_folder, PUBLIC_FOLDER
-	end
+		set :public_folder, DIST_FOLDER
 
-	get '/dev' do
-		Document.from_yaml(WEBSITE_META_YAML).render
+		get '/dev' do
+			send_file File.expand_path("index.html", DIST_FOLDER)
+		end
+
 	end
 
 	get /\/(image|document)\/(.*\.([a-zA-Z0-9]+))/ do
