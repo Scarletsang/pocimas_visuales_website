@@ -7,14 +7,12 @@ export default class NavigationBar extends LitElement {
   event = new NavigationBarController(this);
 
   static properties = {
-    outerStructure: {reflect: true}
+    structure: {reflect: true}
   }
 
   static styles = css`
     :host {
-      width: var(--nav-width);
       border: none;
-      height: 35rem;
       padding: 1.5ex 0;
       display: flex;
       flex-direction: column;
@@ -22,9 +20,15 @@ export default class NavigationBar extends LitElement {
       box-sizing: border-box;
     }
 
+    :host[structure=home] {
+      padding: 1.5ex 3rem;
+    }
+
     :host * {
       font: normal 600 1.25rem "Mali", sans-serif;
     }
+
+    h1 {font: unset }
 
     #website-icon-image {
       display: block;
@@ -39,27 +43,27 @@ export default class NavigationBar extends LitElement {
       background: url("/img/logo_02.svg") no-repeat;
     }
 
-    #website-icon-text {
+    slot {
       display: block;
       margin-bottom: 2rem;
     }
 
-    #website-icon-text h1:nth-child(1) {
+    ::slotted(h1:nth-child(1)) {
       font-size: 3rem;
       margin-bottom: 0;
     }
 
-    #website-icon-text h1:nth-child(2) {
+    ::slotted(h1:nth-child(2)) {
       font-size: 1rem;
     }
 
-    #website-icon-text hr:nth-child(3) {
+    ::slotted(hr:nth-child(3)) {
       margin-bottom: 0;
       margin-top: 24px;
       border: 1px solid var(--theme-color);
     }
 
-    #website-icon-text h1:nth-child(4) {
+    ::slotted(h1:nth-child(4)) {
       margin: 0;
       font-size: 1rem;
       font-style: italic;
@@ -77,14 +81,8 @@ export default class NavigationBar extends LitElement {
   `
 
   homePage() {
-    console.log(this);
     return html`
-      <div id="website-icon-text">
-        <h1>Pócima Visual 02_</h1>
-        <h1>estando aquí no estoy estoy</h1>
-        <hr>
-        <h1>Escuela de espiritismo tecnológico</h1>
-      </div>
+      <slot name= "website-icon-text"></slot>
       <lesson-list></lesson-list>
       <button id="start-btn" type="button" @click="${this.event.startBtn}">
         <h1>comenzar</h1>
@@ -106,7 +104,7 @@ export default class NavigationBar extends LitElement {
   }
 
   render() {
-    switch (this.outerStructure) {
+    switch (this.structure) {
       case "home":
         return this.homePage();
       case "cinema":
@@ -118,11 +116,6 @@ export default class NavigationBar extends LitElement {
 }
 
 class NavigationBarController extends ComponentController {
-
-  callback() {
-    this.host.outerStructure = this.nodeWalker.currentStructure;
-  }
-
   startBtn() {
     let nextIds = this.nodeWalker.nextIds();
     let startNodeId = nextIds[nextIds.length - 1];

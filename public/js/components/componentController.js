@@ -9,12 +9,15 @@ export default class ComponentController {
     this.eventDispatcher = store.get("eventDispatcher");
   }
 
-  callback() {throw "callback not implemented.";}
+  onStructureChange() {}
   
   hostConnected() {
-    let func = () => {this.callback.call(this)}
+    let func = () => {
+      this.host.structure = this.nodeWalker.currentStructure;
+      this.onStructureChange.call(this)
+    }
     this.eventDispatcher.append(this.id, func);
-    this.callback();
+    this.onStructureChange();
   }
 
   hostDisconnected() {

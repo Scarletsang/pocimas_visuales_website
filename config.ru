@@ -6,14 +6,13 @@ require_relative 'src/renderer.rb'
 class PreCompiling
   include Paths
   def initialize env
+    Renderer.compile_website_to(PUBLIC_FOLDER, WEBSITE_META_YAML)
+    Renderer.compile_nodes_json_to(DATA_FOLDER, NODES_CONNECTION_YAML)
     case env
     when "production"
-      html_path = pre_render(PUBLIC_FOLDER, WEBSITE_META_YAML)
-      system("rollup -c")
-      File.delete(html_path) if File.exist?(html_path)
-      # Run Server
+      system("rollup --config rollup.config.prod.js")
     when "development"
-      pre_render(PUBLIC_FOLDER, WEBSITE_META_YAML)
+      system("rollup --config rollup.config.dev.js")
     end
   end
 end

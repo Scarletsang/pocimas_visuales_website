@@ -24,6 +24,10 @@
   %body.main-view
     %img#cover{:src => cover_image_url}
     %navigation-bar
+      %h1{:slot => "website-icon-text"} Pócima Visual 02_
+      %h1{:slot => "website-icon-text"} estando aquí no estoy estoy
+      %hr{:slot => "website-icon-text"}
+      %h1{:slot => "website-icon-text"} Escuela de espiritismo tecnológico
     %main.center-menu
       %button#next-lesson-btn{:type => "button"}
         %h1= next_lesson_btn_text
@@ -34,6 +38,3 @@
       %button#close-popup-btn{:type => "button"}
         %img{:src => "img/close-popup-btn.svg"}/
     #cache{:style => "display: none;"}
-    %template
-      - nodes.each do |node|
-        = node

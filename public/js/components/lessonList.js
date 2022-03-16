@@ -1,4 +1,4 @@
-import { LitElement, css, html} from 'lit';
+import { LitElement, css, html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { ENTRY_NODE_ID } from "../store.js";
 import ComponentController from './componentController.js';
@@ -8,8 +8,8 @@ export default class LessonList extends LitElement {
   controller = new LessonListController(this);
 
   static properties = {
-    outerStructure: {reflect: true},
-    usePrefix: {type: Boolean, reflect: true},
+    structure: {reflect: true},
+    usePrefix: {type: Boolean, state: true},
     currentNodeId: {state: true}
   }
 
@@ -27,12 +27,12 @@ export default class LessonList extends LitElement {
       padding: 0;
     }
 
-    :host([outerStructure="home"]) a {
+    :host([structure=home]) a {
       color: var(--theme-color);
       margin-bottom: 1.5rem;
     }
 
-    :host([outerStructure="home"]) a:hover {
+    :host([structure=home]) a:hover {
       color: var(--highlight-color);
     }
   `
@@ -67,10 +67,9 @@ class LessonListController extends ComponentController {
     this.lessons = [];
   }
 
-  callback() {
+  onStructureChange() {
     this.host.currentNodeId  = this.nodeWalker.currentId;
-    this.host.outerStructure = this.nodeWalker.currentStructure;
-    switch (this.host.outerStructure) {
+    switch (this.host.structure) {
       case "info":
         this.infoPage();
         break;

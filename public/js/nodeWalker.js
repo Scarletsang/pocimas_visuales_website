@@ -46,12 +46,9 @@ class NodeHistory {
 }
 
 class NodeMap {
-  constructor(nodes, fieldNameForNextNode = NODE_FIELD_NAMES.nextNode) {
-    this.map = new Map();
+  constructor(jsonObj, fieldNameForNextNode = NODE_FIELD_NAMES.nextNode) {
+    this.nodes = new Map(Object.entries(jsonObj));
     this.fieldNameForNextNode = fieldNameForNextNode;
-    for (let node of nodes) {
-      if (node.nodeName == "SECTION") this.map.set(node.id, node.cloneNode(true));
-    }
   }
 
   hasNode(nodeId) { return this.map.has(nodeId); }
@@ -128,11 +125,12 @@ export default class NodeWalker {
   /**
    * Create a NodeWaler pseudo iterator from nodes
    * stored in the first encountered template tag.
-   * @param {String} id 
+   * @param {Object} jsonObj
+   * @param {String} startId
    * @returns {NodeWalker}
    */
-  static fromTemplateTag(startId) {
-    let nodes = document.getElementsByTagName("template")[0].content.childNodes;
+  static fromJSON(jsonObj, startId) {
+    let nodes   = jsonObj;
     let nodeMap = new NodeMap(nodes);
     let history = new NodeHistory(startId);
     let eventDispatcher = store.get("eventDispatcher");

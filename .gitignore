@@ -1,7 +1,9 @@
-/design
-/uploads
 .DS_Store
 */.DS_Store
-/tmp
 /node_modules
+/design
+/tmp
+/uploads
 /dist
+/data
+/public/*.html

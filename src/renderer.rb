@@ -1,81 +1,102 @@
 require 'yaml'
 require 'haml'
+require 'json'
 require_relative 'markdown_parser.rb'
 require_relative 'paths.rb'
 
-class Document
-	include Paths
-	attr_reader :hash
-	def initialize(hash)
-		@haml = VIEWS_FOLDER + "document.haml"
-		@hash = hash
-	end
-
-	def change_hash
-		yaml = File.read(NODES_CONNECTION_YAML)
-		raw_nodes = YAML.load(yaml)
-		nodes = []
-		raw_nodes.each do |node_id, node_meta|
-			node_meta["id"] = node_id
-			node = Node.new(node_meta).render
-			nodes.append(node)
-		end
-		@hash["nodes"] = nodes
-	end
-
-	def render
-		change_hash
-		@hash.transform_keys!(&:to_sym)
-		haml = Haml::Engine.new File.read(@haml)
-		haml.render Object.new, @hash
-	end
-	
-	def self.from_yaml(file)
-		yaml = File.read(file)
-		self.new YAML.load(yaml)
-	end
+class Website
+  include Paths
+  attr_reader :content
+  def initialize(content)
+    @template = VIEWS_FOLDER + "website.haml"
+    @content = content
+  end
+  
+  def self.from_yaml(file)
+    yaml = File.read(file)
+    self.new YAML.load(yaml)
+  end
+  
+  def to_html
+    @content.transform_keys!(&:to_sym)
+    template = Haml::Engine.new File.read(@template)
+    template.render Object.new, @content
+  end
 end
 
-class Node
-	include Paths
-	def initialize(hash)
-		@haml = VIEWS_FOLDER + "node.haml"
-		@hash = hash
-	end
+class Nodes
+  include Paths
+  def initialize(content)
+    @template = VIEWS_FOLDER + "node.haml"
+    @content = content
+  end
 
-	def change_hash
-		@hash["node_next"] = @hash.delete("next").join(',') if @hash["next"]
-		@hash["nav"] = @hash["nav"].join(',') if @hash["nav"]
-		markdown_file = @hash.delete("file")
-		return if !markdown_file
-		@hash["node_content"] = UnStructureContent.from_markdown(MARKDOWN_FOLDER + markdown_file)
-	end
+  def self.from_yaml(file)
+    yaml = File.read(file)
+    self.new YAML.load(yaml)
+  end
+  
+  def to_html
+    html = ''
+    template = Haml::Engine.new File.read(@template)
+    deep_clone(@content).each do |node_id, node_meta|
+      node_meta["node_next"] = node_meta.delete("next").join(',') if node_meta["next"]
+      markdown_file = @hash.delete("file")
+      node_meta["node_content"] = render_node_from(markdown_file) if markdown_file
+      node_meta.transform_keys!(&:to_sym)
+      html << template.render Object.new, node_meta
+    end
+    html
+  end
 
-	def render
-		change_hash
-		@hash.transform_keys!(&:to_sym)
-		haml = Haml::Engine.new File.read(@haml)
-		haml.render Object.new, @hash
-	end
+  def to_json
+    content = deep_clone(@content)
+    content.each do |node_id, node_meta|
+      markdown_file = node_meta.delete("file")
+      node_meta["html"] = render_node_from(markdown_file) if markdown_file
+    end
+    JSON.pretty_generate(content)
+  end
+
+  private
+
+  def render_node_from markdown_file
+    input_text = File.read(MARKDOWN_FOLDER + markdown_file)
+    options = {
+      :input => 'CustomKramdown',
+      :parse_block_html => true
+    }
+    Kramdown::Document.new(input_text, options).to_html
+  end
+
+  def deep_clone hash
+    Marshal.load(Marshal.dump(hash))
+  end
 end
 
-module UnStructureContent
-	def self.from_markdown(file)
-		input_text = File.read(file)
-		options = {
-			:input => 'CustomKramdown',
-			:parse_block_html => true
-		}
-		Kramdown::Document.new(input_text, options).to_html
-	end
-end
+module Renderer
+  class << self
+    def compile_website_to dest_folder, website_config_yaml
+      file_name = "index.html"
+      rendered  = Website.from_yaml(website_config_yaml).to_html
+      compile_to(rendered, dest_folder, file_name)
+    end
+    
+    def compile_nodes_json_to dest_folder, nodes_yaml
+      file_name = "nodes.json"
+      rendered = Nodes.from_yaml(nodes_yaml).to_json
+      compile_to(rendered, dest_folder, file_name)
+    end
+    
+    private
 
-def pre_render(dest_folder, website_meta_yaml)
-	rendered = Document.from_yaml(website_meta_yaml).render
-	Dir.chdir(dest_folder) do
-		html = File.new("index.html", "w")
-		html.puts rendered
-	end
-	puts "Successfully pre-rendered index.html in the folder #{File.expand_path(dest_folder, Dir.pwd)}!"
-	File.expand_path("index.html", dest_folder)
+    def compile_to rendered_string, dest_folder, dest_file_name
+      Dir.chdir(dest_folder) do
+        html = File.new(file_name, "w")
+        html.puts rendered_string
+      end
+      puts "Successfully compiled #{file_name} in the folder #{File.expand_path(dest_folder, Dir.pwd)}!"
+      File.expand_path(file_name, dest_folder)
+    end
+  end
 end
