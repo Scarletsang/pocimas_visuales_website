@@ -2,6 +2,7 @@ require 'yaml'
 require 'haml'
 require 'json'
 require_relative 'markdown_parser.rb'
+require_relative 'markdown_structural_parser.rb'
 require_relative 'paths.rb'
 
 class Website
@@ -44,7 +45,7 @@ class Nodes
       markdown_file = @hash.delete("file")
       node_meta["node_content"] = render_node_from(markdown_file) if markdown_file
       node_meta.transform_keys!(&:to_sym)
-      html << template.render Object.new, node_meta
+      html << template.render(Object.new, node_meta)
     end
     html
   end
@@ -52,21 +53,46 @@ class Nodes
   def to_json
     content = deep_clone(@content)
     content.each do |node_id, node_meta|
-      markdown_file = node_meta.delete("file")
-      node_meta["html"] = render_node_from(markdown_file) if markdown_file
+      node_meta["id"] = node_id
+      router(node_meta)
     end
     JSON.pretty_generate(content)
   end
 
   private
 
-  def render_node_from markdown_file
-    input_text = File.read(MARKDOWN_FOLDER + markdown_file)
+  def router node_meta
+    return if !node_meta.has_key?("structure") || !node_meta.has_key?("file")
+    markdown_file = node_meta.delete("file")
+    markdown = File.read(MARKDOWN_FOLDER + markdown_file)
+    case node_meta["structure"]
+    when "choice"
+      render_choice_node(markdown, node_meta)
+    else
+      render_normal_node(markdown, node_meta)
+    end
+  end
+
+  def render_choice_node markdown, node_meta
+    raw = ChoiceNode.new(markdown, node_meta).to_array
+    choices = raw.map do |choice|
+      choice["front"] = render_markdown(choice["front"])
+      choice["back"] = render_markdown(choice["back"])
+      choice
+    end
+    node_meta["choices"] = choices
+  end
+
+  def render_normal_node markdown, node_meta
+    node_meta["html"] = render_markdown(markdown)
+  end
+
+  def render_markdown markdown
     options = {
       :input => 'CustomKramdown',
       :parse_block_html => true
     }
-    Kramdown::Document.new(input_text, options).to_html
+    Kramdown::Document.new(markdown, options).to_html
   end
 
   def deep_clone hash
@@ -91,12 +117,14 @@ module Renderer
     private
 
     def compile_to rendered_string, dest_folder, dest_file_name
+      system('mkdir', '-p', dest_folder)
       Dir.chdir(dest_folder) do
-        html = File.new(file_name, "w")
-        html.puts rendered_string
+        File.open(dest_file_name, "w") do |html|
+          html.puts rendered_string
+        end
       end
-      puts "Successfully compiled #{file_name} in the folder #{File.expand_path(dest_folder, Dir.pwd)}!"
-      File.expand_path(file_name, dest_folder)
+      puts "Successfully compiled #{dest_file_name} in the folder #{File.expand_path(dest_folder, Dir.pwd)}!"
+      File.expand_path(dest_file_name, dest_folder)
     end
   end
 end
