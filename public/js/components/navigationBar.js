@@ -1,13 +1,14 @@
 import { LitElement, css, html} from 'lit';
-import { ENTRY_NODE_ID } from "../store.js";
-import ComponentController from './componentController.js';
+import { ENTRY_NODE_ID } from "../store";
+import ComponentController from './componentController';
 
 export default class NavigationBar extends LitElement {
 
-  event = new NavigationBarController(this);
+  controller = new NavigationBarController(this);
 
   static properties = {
-    structure: {reflect: true}
+    structure: {reflect: true},
+    nextIds:   {type: Array, state: true}
   }
 
   static styles = css`
@@ -20,12 +21,12 @@ export default class NavigationBar extends LitElement {
       box-sizing: border-box;
     }
 
-    :host[structure=home] {
+    :host([structure=home]) {
       padding: 1.5ex 3rem;
     }
 
     :host * {
-      font: normal 600 1.25rem "Mali", sans-serif;
+      font: var(--nav-font);
     }
 
     h1 {font: unset }
@@ -37,6 +38,11 @@ export default class NavigationBar extends LitElement {
       margin-bottom: 2rem;
       cursor: pointer;
       background: url("/img/logo_01.svg") no-repeat;
+      transition: all 200ms ease-in-out;
+    }
+    
+    :host([structure=cinema]) #website-icon-image {
+      width: 6rem;
     }
 
     #website-icon-image:hover, #website-icon-image:active {
@@ -83,8 +89,8 @@ export default class NavigationBar extends LitElement {
   homePage() {
     return html`
       <slot name= "website-icon-text"></slot>
-      <lesson-list></lesson-list>
-      <button id="start-btn" type="button" @click="${this.event.startBtn}">
+      <lesson-list structure="${this.structure}"></lesson-list>
+      <button id="start-btn" type="button" @click="${this.startBtn}">
         <h1>comenzar</h1>
       </button>
     `
@@ -92,14 +98,14 @@ export default class NavigationBar extends LitElement {
 
   cinemaPage() {
     return html`
-      <div @click="${this.event.iconBtn}" id="website-icon-image"></div>
+      <div @click="${this.iconBtn}" id="website-icon-image"></div>
     `
   }
 
   contentPage() {
     return html`
-      <div @click="${this.event.iconBtn}" id="website-icon-image"></div>
-      <lesson-list></lesson-list>
+      <div @click="${this.iconBtn}" id="website-icon-image"></div>
+      <lesson-list structure="${this.structure}"></lesson-list>
     `
   }
 
@@ -113,16 +119,20 @@ export default class NavigationBar extends LitElement {
         return this.contentPage();
     }
   }
-}
 
-class NavigationBarController extends ComponentController {
   startBtn() {
-    let nextIds = this.nodeWalker.nextIds();
-    let startNodeId = nextIds[nextIds.length - 1];
+    let startNodeId = this.nextIds[this.nextIds.length - 1];
     window.location.hash = `#${startNodeId}`;
   }
 
   iconBtn() {
     window.location.hash = `#${ENTRY_NODE_ID}`
+  }
+}
+
+class NavigationBarController extends ComponentController {
+  onStructureChange() {
+    let nextIds = this.nodeWalker.nextIds;
+    this.host.nextIds = nextIds ? nextIds : [];
   }
 }

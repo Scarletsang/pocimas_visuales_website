@@ -1,5 +1,5 @@
-import { MediaPreloader, Cache } from "./helpers.js";
-import EventDispatcher from "./eventDispatcher.js";
+import { MediaPreloader, Cache } from "./helpers";
+import EventDispatcher from "./eventDispatcher";
 
 export const body = document.getElementsByTagName("body")[0];
 export const nav  =  document.getElementsByTagName("nav")[0];
@@ -11,7 +11,7 @@ export const mediaPreloader = new MediaPreloader();
 
 export const ENTRY_NODE_ID = "home";
 export const NODE_FIELD_NAMES = {
-  nodeTitle: "lesson-title",
+  nodeTitle: "title",
   structure: "structure",
   nextNode: "next"
 };

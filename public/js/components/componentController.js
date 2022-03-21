@@ -1,5 +1,5 @@
-import store from "../store.js";
-import { generateUID } from "../helpers.js"
+import store from "../store";
+import { generateUID } from "../helpers"
 
 export default class ComponentController {
   constructor(host) {

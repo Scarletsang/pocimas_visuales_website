@@ -1,6 +1,5 @@
 import { LitElement, css, html  } from "lit";
-import { styleMap } from 'lit/directives/style-map.js';
-import ComponentController from "./componentController.js";
+import ComponentController from "./componentController";
 
 export default class Page extends LitElement {
   controller = new ComponentController(this);
@@ -10,18 +9,7 @@ export default class Page extends LitElement {
   }
 
   static styles = css`
-    ::slotted( img[name="cover-image"] ) {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      height: 100vh;
-      width: calc(100vw - var(--border-width) - 27rem);
-      padding-left: calc(var(--border-width) + 27rem);
-      object-fit: contain;
-      transform: translateY(-50%);
-      box-sizing: content-box;
-    }
-
+    /* default structure: content */
     ::slotted( navigation-bar ){
       top: 50%;
       left: var(--border-width);
@@ -36,19 +24,7 @@ export default class Page extends LitElement {
       z-index: 2;
     }
 
-    :host[structure=home] ::slotted( navigation-bar ){
-      width: 25rem;
-      margin: 0;
-      z-index: 0;
-    }
-
-    :host[structure=cinema] ::slotted( navigation-bar ){
-      top: 0;
-      left: 0;
-      transform: translate(0, 0);
-    }
-
-    page-content {
+    #page-content-wrapper {
       position: absolute;
       top: 0;
       left: calc(var(--border-width) + var(--nav-width));
@@ -57,63 +33,107 @@ export default class Page extends LitElement {
       transition: all linear 1s;
       -webkit-transition: all linear 1s;
       box-sizing: border-box;
+      overflow-y: scroll;
+      overflow-x: hidden;
       z-index: 1;
     }
+
+    page-content {
+      position: absolute;
+      border: none;
+      top: var(--border-width);
+      left: 0;
+      width: calc(100% - var(--border-width));
+      height: max-content;
+    }
+
+    /* structure: home */
     
-    #focus-frame {
-      position: fixed;
+    :host([structure=home]) ::slotted( navigation-bar ){
+      width: 25rem;
+      margin: 0;
       border: var(--focus-border);
-      z-index: -1;
-      transition: all linear 1s;
-      -webkit-transition: all linear 1s;
+    }
+    
+    ::slotted( img[slot="cover-image"] ) {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 100vh;
+      width: calc(100vw - var(--border-width) - 27rem);
+      padding-left: calc(var(--border-width) + 27rem);
+      object-fit: contain;
+      transform: translateY(-50%);
+      box-sizing: content-box;
+    }
+
+    /* structure: choice */
+
+    :host([structure=choice]) #page-content-wrapper {
+      padding-bottom: var(--border-width);
+    }
+
+    /* structure: cinema */
+    
+    :host([structure=cinema]) ::slotted( navigation-bar ){
+      top: 0;
+      left: 0;
+      transform: translate(0, 0);
+    }
+    
+    :host([structure=cinema]) #page-content-wrapper {
+      left: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    :host([structure=cinema]) page-content {
+      top: 0;
+      width: 100%;
+      box-sizing: border-box;
     }
   `
 
   homePage() {
-    const targetFrameElement = this.renderRoot.querySelector('navigation-bar');
-    const frameDimension = this.focusFrameOn(targetFrameElement);
     return html`
-      <slot></slot>
+      <slot name="navigation-bar"></slot>
       <slot name="cover-image"></slot>
-      <div id="focus-frame" style=${styleMap(frameDimension)}></div>
-    `
-  }
-  
-  contentPage() {
-    const targetFrameElement = this.renderRoot.querySelector('page-content');
-    const frameDimension = this.focusFrameOn(targetFrameElement);
-    return html`
-      <slot></slot>
-      <page-content></page-content>
-      <div id="focus-frame" style=${styleMap(frameDimension)}></div>
-      `
-  }
-  
-  frameLessPage() {
-    return html`
-      <slot></slot>
-      <page-content></page-content>
     `
   }
 
+  choicePage() {
+    
+  }
+  
+  contentPage() {
+    return html`
+      <slot name="navigation-bar"></slot>
+      ${this.renderPageContent()}
+      `
+  }
+
+  renderPageContent() {
+    return html`
+      <div id="page-content-wrapper">
+        <page-content structure="${this.structure}"></page-content>
+      </div>
+    `
+  }
+  
   render() {
     switch (this.structure) {
       case "home":
         return this.homePage();
-      case "content":
-        return this.contentPage();
       default:
-        return this.frameLessPage();
+        return this.contentPage();
     }
   }
 
-  focusFrameOn(element) {
-    const dimension = element.getBoundingClientRect();
-    return {
-      top: dimension.top,
-      left: dimension.left,
-      width: dimension.width,
-      height: dimension.height
-    };
+  async getUpdateComplete() {
+    await super.getUpdateComplete();
+    const children = Array.from(this.shadowRoot.children);
+    await Promise.all(children.map(el => el.updateComplete));
+    return true;
   }
 }

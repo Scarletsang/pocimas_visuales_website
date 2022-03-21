@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
-import { ENTRY_NODE_ID } from "../store.js";
-import ComponentController from './componentController.js';
+import { repeat } from 'lit/directives/repeat';
+import { ENTRY_NODE_ID } from "../store";
+import ComponentController from './componentController';
 
 export default class LessonList extends LitElement {
   
@@ -10,6 +10,7 @@ export default class LessonList extends LitElement {
   static properties = {
     structure: {reflect: true},
     usePrefix: {type: Boolean, state: true},
+    lessons: {type: Array, state: true},
     currentNodeId: {state: true}
   }
 
@@ -39,15 +40,15 @@ export default class LessonList extends LitElement {
 
   renderItem(lesson, index) {
     if (this.usePrefix) {
-      return html`${index}: ${lesson.getAttribute("lesson-title")}`;
+      return html`${index + 1}. ${lesson.title}`;
     }
-    return html`${lesson.getAttribute("lesson-title")}`;
+    return html`${lesson.title}`;
   }
 
   render() {
     return html`
       ${repeat(
-        this.controller.lessons,
+        this.lessons,
         (lesson) => lesson,
         (lesson, index) => {
           if (lesson.id == this.currentNodeId) {
@@ -61,18 +62,11 @@ export default class LessonList extends LitElement {
 }
 
 class LessonListController extends ComponentController {
-  lessons;
-  constructor(host) {
-    super(host)
-    this.lessons = [];
-  }
 
   onStructureChange() {
-    this.host.currentNodeId  = this.nodeWalker.currentId;
+    this.host.currentNodeId = this.nodeWalker.currentId;
     switch (this.host.structure) {
       case "info":
-        this.infoPage();
-        break;
       case "home":
         this.homePage();
         break;
@@ -80,18 +74,11 @@ class LessonListController extends ComponentController {
         this.contentPage();
     }
   }
-
-  infoPage() {
-    let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(ENTRY_NODE_ID);
-    nodeArray.splice(-1);
-    this.lessons = nodeArray;
-    this.host.usePrefix = false;
-  }
-
+  
   homePage() {
     let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(ENTRY_NODE_ID);
     nodeArray.splice(-1);
-		this.lessons = nodeArray;
+		this.host.lessons = nodeArray;
 		this.host.usePrefix = false;
   }
 
@@ -99,7 +86,7 @@ class LessonListController extends ComponentController {
     let nodeArray = this.nodeWalker.wanderFromTo(ENTRY_NODE_ID, this.nodeWalker.currentId);
     let nodeArray2 = this.nodeWalker.wanderTillNodeChoice();
     //slice to prevent showing entry node in the navigation bar.
-    this.lessons = nodeArray ? [...nodeArray.slice(1), ...nodeArray2] : nodeArray2 ;
+    this.host.lessons = nodeArray ? [...nodeArray.slice(1), ...nodeArray2] : nodeArray2 ;
     this.host.usePrefix = true;
   }
 }

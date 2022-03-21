@@ -21,20 +21,17 @@
     - js_files.each do |js_name|
       %script{:src => "js/#{js_name}", :type => "module"}
     %title= title
-  %body.main-view
-    %img#cover{:src => cover_image_url}
-    %navigation-bar
+  %page-element
+    %img{:slot => "cover-image", :src => cover_image_url}
+    %navigation-bar{:slot => "navigation-bar"}
       %h1{:slot => "website-icon-text"} Pócima Visual 02_
       %h1{:slot => "website-icon-text"} estando aquí no estoy estoy
       %hr{:slot => "website-icon-text"}
-      %h1{:slot => "website-icon-text"} Escuela de espiritismo tecnológico
-    %main.center-menu
-      %button#next-lesson-btn{:type => "button"}
-        %h1= next_lesson_btn_text
-    #popup.hide
-      %object#popup-pdf
-      %img#popup-image
-      %p#popup-image-text
-      %button#close-popup-btn{:type => "button"}
-        %img{:src => "img/close-popup-btn.svg"}/
-    #cache{:style => "display: none;"}
+      %h1{:slot => "website-icon-text"} Escuela de espiritismo tecnológico    
+  #popup.hide
+    %object#popup-pdf
+    %img#popup-image
+    %p#popup-image-text
+    %button#close-popup-btn{:type => "button"}
+      %img{:src => "img/close-popup-btn.svg"}/
+  #cache{:style => "display: none;"}

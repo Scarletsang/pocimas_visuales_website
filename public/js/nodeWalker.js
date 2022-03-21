@@ -1,4 +1,4 @@
-import store, { NODE_FIELD_NAMES } from "./store.js";
+import store, { NODE_FIELD_NAMES } from "./store";
 
 class NodeHistory {
   constructor(root) {
@@ -51,15 +51,15 @@ class NodeMap {
     this.fieldNameForNextNode = fieldNameForNextNode;
   }
 
-  hasNode(nodeId) { return this.map.has(nodeId); }
+  hasNode(nodeId) { return this.nodes.has(nodeId); }
 
-  getNode(nodeId) { return this.map.get(nodeId); }
+  getNode(nodeId) { return this.nodes.get(nodeId); }
 
   getNodeAttribute(nodeId, attribute) {
     let node = this.getNode(nodeId);
     if (node) {
-      if (!node.hasAttribute(attribute)) return null;
-      return node.getAttribute(attribute);
+      if (!node.hasOwnProperty(attribute)) return null;
+      return node[attribute];
     }
     return node;
   }
@@ -73,7 +73,9 @@ class NodeMap {
   }
 
   isEndNode(nodeId) {
-    return this.getNode(nodeId)?.hasAttribute(this.fieldNameForNextNode);
+    let node = this.getNode(nodeId);
+    if (node) return !node.hasOwnProperty(this.fieldNameForNextNode);
+    return node;
   }
   
   isChoiceNode(nodeId) {
@@ -85,11 +87,11 @@ class NodeMap {
    * @returns {Array<String>}
    */
   nextIdsOf(nodeId) {
-    return this.getNodeAttribute(nodeId, this.fieldNameForNextNode)?.split(',');
+    return this.getNodeAttribute(nodeId, this.fieldNameForNextNode);
   }
 
   nextNodesOf(nodeId) {
-    let nodesArray = this.nextIdsOf(nodeId)?.map(id => this.map.get(id));
+    let nodesArray = this.nextIdsOf(nodeId)?.map(id => this.nodes.get(id));
     return nodesArray;
   }
 }
@@ -121,6 +123,10 @@ export default class NodeWalker {
   get isChoiceNode()     {return this.nodeMap.isChoiceNode(this._currentId); }
   get nextIds()          {return this.nodeMap.nextIdsOf(this._currentId); }
   get nextNodes()        {return this.nodeMap.nextNodesOf(this._currentId); }
+
+  currentNodeAttribute(attribute) {
+    return this.nodeMap.getNodeAttribute(this._currentId, attribute);
+  }
 
   /**
    * Create a NodeWaler pseudo iterator from nodes
@@ -207,7 +213,7 @@ export default class NodeWalker {
       return arr.concat(clone.wanderFromTo(clone.currentId, destId));
     }
     // If there is a choice, make a depth first search recursively.
-    for (let id of clone.nextIds()) {
+    for (let id of clone.nextIds) {
       let nodesAfterChoice = clone.wanderFromTo(id, destId);
       if (nodesAfterChoice) return arr.concat(nodesAfterChoice);
     }
