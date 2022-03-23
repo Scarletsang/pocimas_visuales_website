@@ -1,4 +1,5 @@
 import { LitElement, css, html  } from "lit";
+import { repeat } from 'lit/directives/repeat.js';
 import ComponentController from "./componentController";
 
 export default class Page extends LitElement {
@@ -38,13 +39,13 @@ export default class Page extends LitElement {
       z-index: 1;
     }
 
-    page-content {
+    .content {
       position: absolute;
       border: none;
       top: var(--border-width);
       left: 0;
       width: calc(100% - var(--border-width));
-      height: max-content;
+      height: calc(100% - 2 * var(--border-width));
     }
 
     /* structure: home */
@@ -71,6 +72,16 @@ export default class Page extends LitElement {
 
     :host([structure=choice]) #page-content-wrapper {
       padding-bottom: var(--border-width);
+      overflow-y: hidden;
+      overflow-x: scroll;
+    }
+
+    :host([structure=choice]) .content {
+      width: unset;
+      top: 0;
+      height: 100%;
+      padding-left: 0;
+      padding-right: 0;
     }
 
     /* structure: cinema */
@@ -88,7 +99,7 @@ export default class Page extends LitElement {
       height: 100vh;
     }
 
-    :host([structure=cinema]) page-content {
+    :host([structure=cinema]) .content {
       top: 0;
       width: 100%;
       box-sizing: border-box;
@@ -101,22 +112,21 @@ export default class Page extends LitElement {
       <slot name="cover-image"></slot>
     `
   }
-
-  choicePage() {
-    
-  }
   
   contentPage() {
     return html`
       <slot name="navigation-bar"></slot>
-      ${this.renderPageContent()}
-      `
+      <div id="page-content-wrapper">
+        <page-content class="content" structure="${this.structure}"></page-content>
+      </div>
+    `
   }
 
-  renderPageContent() {
+  choicePage() {
     return html`
-      <div id="page-content-wrapper">
-        <page-content structure="${this.structure}"></page-content>
+      <slot name="navigation-bar"></slot>
+      <div id="page-content-wrapper" @wheel=${this.horizontalScroll}>
+        <lobby-element class="content" ></lobby-element>
       </div>
     `
   }
@@ -125,6 +135,8 @@ export default class Page extends LitElement {
     switch (this.structure) {
       case "home":
         return this.homePage();
+      case "choice":
+        return this.choicePage();
       default:
         return this.contentPage();
     }
@@ -135,5 +147,9 @@ export default class Page extends LitElement {
     const children = Array.from(this.shadowRoot.children);
     await Promise.all(children.map(el => el.updateComplete));
     return true;
+  }
+
+  horizontalScroll(event) {
+    event.currentTarget.scrollLeft += event.deltaY;
   }
 }

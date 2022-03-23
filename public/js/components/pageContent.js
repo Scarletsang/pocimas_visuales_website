@@ -1,20 +1,22 @@
 import { LitElement, css, html  } from "lit";
-import { defaultButton, defaultFonts } from "./styles";
+import { defaultButton, defaultFonts, defaultMedia } from "./styles";
 import ComponentController from "./componentController";
 
 export default class PageContent extends LitElement {
   controller = new PageContentController(this);
 
   static properties = {
-    structure: {reflect: true},
+    structure:         {reflect: true},
     nextLessonBtnText: {state: true},
-    nextIds:   {type: Array, state: true},
-    content:  {type: DocumentFragment, state: true}
+    nextId:            {state: true},
+    isEndNode:         {type: Boolean, state: true},
+    content:           {type: DocumentFragment, state: true}
   }
 
   static styles = [
     defaultButton,
     defaultFonts,
+    defaultMedia,
     css`
     /* default structure: content */
     :host {
@@ -22,14 +24,10 @@ export default class PageContent extends LitElement {
       -webkit-transition: all linear 1s;
     }
 
-    img { max-width: 100%;}
-    video { width: 100%; }
-
     .lesson-content {
       min-height: 100%;
       border: var(--focus-border);
       box-sizing: border-box;
-      overflow-x: hidden;
       padding: 2rem;
       display: flex;
       flex-direction: column;
@@ -58,29 +56,19 @@ export default class PageContent extends LitElement {
       padding: var(--border-width);
     }
     
-    :host([structure=cinema]) .lesson-content{
+    :host([structure=cinema]) .lesson-content {
       padding: 0;
+      border: none;
     }
   `]
 
-  choicePage() {
-
-  }
-
-  contentPage() {
-    return html`
-      <section class="lesson-content">${this.renderContent()}</section>
-      ${this.renderNextLessonBtn()}
-    `
-  }
-
-  renderContent() {
-    if (!this.content) return ''
-    return document.createRange().createContextualFragment(`${ this.content }`);
+  renderContent(content) {
+    if (!content) return ''
+    return document.createRange().createContextualFragment(content);
   }
 
   renderNextLessonBtn() {
-    if (this.nextIds.length != 1) return ''
+    if (this.isEndNode) return ''
     return html`
       <button @click=${this.nextLessonBtn} id="next-lesson-btn" type="button">
         <h1>${this.nextLessonBtnText}</h1>
@@ -89,26 +77,25 @@ export default class PageContent extends LitElement {
   }
 
   render() {
-    switch (this.structure) {
-      case "choice":
-        return this.choicePage();
-      default:
-        return this.contentPage();
-    }
+    return html`
+      <section class="lesson-content">${this.renderContent(this.content)}</section>
+      ${this.renderNextLessonBtn()}
+    `
   }
 
   nextLessonBtn() {
-    let nextId = this.nextIds[0];
+    let nextId = this.nextId;
     window.location.hash = `#${nextId}`;
   }
 }
 
 class PageContentController extends ComponentController {
   onStructureChange() {
-    let nextIds = this.nodeWalker.nextIds;
-    let nextLessonBtnText = this.nodeWalker.currentNodeAttribute("nextLessonBtnText");
-    this.host.content = this.nodeWalker.currentNodeAttribute("html");
+    this.host.isEndNode = this.nodeWalker.isEndNode;
+    let nextLessonBtnText = this.nodeWalker.currentNextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    this.host.nextIds = nextIds ? nextIds : [];
+    let content = this.nodeWalker.currentContent;
+    this.host.nextId  = this.nodeWalker.nextIds[0];
+    this.host.content = content ? content : "";
   }
 }

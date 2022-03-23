@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
-import { repeat } from 'lit/directives/repeat';
-import { ENTRY_NODE_ID } from "../store";
+import { repeat } from 'lit/directives/repeat.js';
+import store from "../store";
 import ComponentController from './componentController';
 
 export default class LessonList extends LitElement {
@@ -76,14 +76,14 @@ class LessonListController extends ComponentController {
   }
   
   homePage() {
-    let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(ENTRY_NODE_ID);
+    let nodeArray = this.nodeWalker.nodeMap.nextNodesOf(store.get("entryNodeId"));
     nodeArray.splice(-1);
 		this.host.lessons = nodeArray;
 		this.host.usePrefix = false;
   }
 
   contentPage() {
-    let nodeArray = this.nodeWalker.wanderFromTo(ENTRY_NODE_ID, this.nodeWalker.currentId);
+    let nodeArray = this.nodeWalker.wanderFromTo(store.get("entryNodeId"), this.nodeWalker.currentId);
     let nodeArray2 = this.nodeWalker.wanderTillNodeChoice();
     //slice to prevent showing entry node in the navigation bar.
     this.host.lessons = nodeArray ? [...nodeArray.slice(1), ...nodeArray2] : nodeArray2 ;

@@ -14,6 +14,10 @@ export const defaultButton = css`
 `;
 
 export const defaultFonts = css`
- p, li { font: var(--paragraph-font); }
- h1 { font: var(--title-font); }
+  p, li { font: var(--paragraph-font); }
+  h1 { font: var(--title-font); }
+`
+export const defaultMedia = css`
+  img { max-width: 100%;}
+  video { width: 100%; }
 `

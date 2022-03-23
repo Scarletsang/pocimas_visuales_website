@@ -1,5 +1,5 @@
 import { LitElement, css, html} from 'lit';
-import { ENTRY_NODE_ID } from "../store";
+import store from "../store";
 import ComponentController from './componentController';
 
 export default class NavigationBar extends LitElement {
@@ -126,7 +126,7 @@ export default class NavigationBar extends LitElement {
   }
 
   iconBtn() {
-    window.location.hash = `#${ENTRY_NODE_ID}`
+    window.location.hash = `#${store.get("entryNodeId")}`
   }
 }
 

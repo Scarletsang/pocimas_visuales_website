@@ -1,4 +1,4 @@
-import store, { NODE_FIELD_NAMES } from "./store";
+import store from "./store";
 
 class NodeHistory {
   constructor(root) {
@@ -46,7 +46,7 @@ class NodeHistory {
 }
 
 class NodeMap {
-  constructor(jsonObj, fieldNameForNextNode = NODE_FIELD_NAMES.nextNode) {
+  constructor(jsonObj, fieldNameForNextNode = store.get("nodeFields").nextIds) {
     this.nodes = new Map(Object.entries(jsonObj));
     this.fieldNameForNextNode = fieldNameForNextNode;
   }
@@ -57,19 +57,12 @@ class NodeMap {
 
   getNodeAttribute(nodeId, attribute) {
     let node = this.getNode(nodeId);
+    // console.log(node, nodeId);
     if (node) {
       if (!node.hasOwnProperty(attribute)) return null;
       return node[attribute];
     }
     return node;
-  }
-
-  getNodeStructure(nodeId) {
-    return this.getNodeAttribute(nodeId, NODE_FIELD_NAMES.structure);
-  }
-
-  getNodeTitle(nodeId) {
-    return this.getNodeAttribute(nodeId, NODE_FIELD_NAMES.nodeTitle);
   }
 
   isEndNode(nodeId) {
@@ -82,10 +75,6 @@ class NodeMap {
     return !this.isEndNode(nodeId) && (this.nextIdsOf(nodeId)?.length > 1);
   }
 
-  /**
-   * Returns an array of id(s) of next Node(s).
-   * @returns {Array<String>}
-   */
   nextIdsOf(nodeId) {
     return this.getNodeAttribute(nodeId, this.fieldNameForNextNode);
   }
@@ -113,20 +102,27 @@ export default class NodeWalker {
     this.history = history;
     this.eventDispatcher = eventDispatcher;
     if (eventDispatcher) store.set("eventDispatcher", eventDispatcher);
+    const handler = {
+      get: function(target, prop, receiver) {
+        if (prop in target) return Reflect.get(...arguments);
+        const regex = /current([A-Z][a-zA-Z0-9]*)/;
+        let fieldName = prop.match(regex)?.at(1);
+        if (!fieldName) return ;
+        fieldName = fieldName.charAt(0).toLowerCase() + fieldName.slice(1);
+        let attribute = store.get("nodeFields")[fieldName];
+        if (!attribute) return ;
+        return target.nodeMap.getNodeAttribute(target._currentId, attribute);
+      }
+    };
+    return new Proxy(this, handler);
   }
 
   get currentId()        {return this._currentId; }
   get currentNode()      {return this.nodeMap.getNode(this._currentId); }
-  get currentStructure() {return this.nodeMap.getNodeStructure(this._currentId); }
-  get currentTitle()     {return this.nodeMap.getNodeTitle(this._currentId); }
   get isEndNode()        {return this.nodeMap.isEndNode(this._currentId); }
   get isChoiceNode()     {return this.nodeMap.isChoiceNode(this._currentId); }
   get nextIds()          {return this.nodeMap.nextIdsOf(this._currentId); }
   get nextNodes()        {return this.nodeMap.nextNodesOf(this._currentId); }
-
-  currentNodeAttribute(attribute) {
-    return this.nodeMap.getNodeAttribute(this._currentId, attribute);
-  }
 
   /**
    * Create a NodeWaler pseudo iterator from nodes
