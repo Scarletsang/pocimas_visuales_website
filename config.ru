@@ -10,6 +10,7 @@ class PreCompiling
     Renderer.compile_nodes_json_to(DATA_FOLDER, NODES_CONNECTION_YAML)
     case env
     when "production"
+      system("rm -rf dist/")
       system("rollup --config rollup.config.prod.js")
     when "development"
       system("rollup --config rollup.config.dev.js")

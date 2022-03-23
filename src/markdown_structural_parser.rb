@@ -8,7 +8,7 @@ class ChoiceNode
   end
 
   def to_array
-    choice_ids = @node_meta["next"]
+    choice_ids = @node_meta["nextIds"]
     regex = /
       \[front\]
       (?<front>(?:(?!\[back\])(?!={3,}\s*)(?:.|\n))*)

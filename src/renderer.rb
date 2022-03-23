@@ -54,6 +54,7 @@ class Nodes
     content = deep_clone(@content)
     content.each do |node_id, node_meta|
       node_meta["id"] = node_id
+      node_meta["nextIds"] = node_meta.delete("next") if node_meta["next"]
       router(node_meta)
     end
     JSON.pretty_generate(content)

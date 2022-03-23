@@ -20,8 +20,7 @@
   },
   "homepage": "https://github.com/Scarletsang/pocimas_visuales_website#readme",
   "dependencies": {
-    "lit": "^2.2.0",
-    "lit-html": "^2.2.0"
+    "lit": "^2.2.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.1.3",
