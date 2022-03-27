@@ -25,10 +25,9 @@ class Website
   end
 end
 
-class Nodes
+class Scope
   include Paths
   def initialize(content)
-    @template = VIEWS_FOLDER + "node.haml"
     @content = content
   end
 
@@ -36,28 +35,42 @@ class Nodes
     yaml = File.read(file)
     self.new YAML.load(yaml)
   end
-  
-  def to_html
-    html = ''
-    template = Haml::Engine.new File.read(@template)
-    deep_clone(@content).each do |node_id, node_meta|
-      node_meta["node_next"] = node_meta.delete("next").join(',') if node_meta["next"]
-      markdown_file = @hash.delete("file")
-      node_meta["node_content"] = render_node_from(markdown_file) if markdown_file
-      node_meta.transform_keys!(&:to_sym)
-      html << template.render(Object.new, node_meta)
+
+  def to_hash
+    @content.each_value do |scope|
+      scope["members"].push(scope["head"])
     end
-    html
   end
 
   def to_json
+    JSON.pretty_generate(to_hash())
+  end
+
+end
+
+class Nodes
+  include Paths
+  def initialize(content)
+    @content = content
+  end
+
+  def self.from_yaml(file)
+    yaml = File.read(file)
+    self.new YAML.load(yaml)
+  end
+
+  def to_hash
     content = deep_clone(@content)
     content.each do |node_id, node_meta|
       node_meta["id"] = node_id
       node_meta["nextIds"] = node_meta.delete("next") if node_meta["next"]
       router(node_meta)
     end
-    JSON.pretty_generate(content)
+    content
+  end
+
+  def to_json
+    JSON.pretty_generate(to_hash())
   end
 
   private
@@ -114,7 +127,16 @@ module Renderer
       rendered = Nodes.from_yaml(nodes_yaml).to_json
       compile_to(rendered, dest_folder, file_name)
     end
-    
+
+    def compile_data_json_to dest_folder, nodes_yaml, scope_yaml
+      file_name = "data.json"
+      nodes = Nodes.from_yaml(nodes_yaml).to_hash
+      scope = Scope.from_yaml(scope_yaml).to_hash
+      hash  = {"nodes" => nodes, "scope" => scope}
+      rendered = JSON.pretty_generate(hash)
+      compile_to(rendered, dest_folder, file_name)
+    end
+
     private
 
     def compile_to rendered_string, dest_folder, dest_file_name

@@ -6,4 +6,5 @@
 /uploads
 /dist
 /data
-/public/*.html
+/archives
+/frontend/*.html

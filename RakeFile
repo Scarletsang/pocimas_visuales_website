@@ -1,0 +1,12 @@
+require_relative 'backend/paths.rb'
+
+desc "init rollup js compilation server for development"
+task :rollup do
+  system("rollup --config rollup.config.dev.js -w")
+end
+
+desc "generate JSdoc"
+task :jsdoc do
+  include Paths
+  system("./node_modules/.bin/jsdoc", "#{PUBLIC_FOLDER}/js", "-r", "-d", DOCUMENTATION_FOLDER)
+end

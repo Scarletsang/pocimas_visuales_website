@@ -11,7 +11,7 @@ export default {
     // Entry point for application build; can specify a glob to build multiple
     // HTML files for non-SPA app
     html({
-      input: 'public/index.html',
+      input: 'frontend/index.html',
       extractAssets: false
     }),
     // Minify HTML template literals
@@ -34,7 +34,7 @@ export default {
         'fonts/**',
         'css/*'
       ],
-      rootDir: './public'
+      rootDir: './frontend'
     }),
   ],
   output: {
