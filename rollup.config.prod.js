@@ -2,6 +2,7 @@ import html from '@web/rollup-plugin-html';
 import {copy} from '@web/rollup-plugin-copy';
 import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
+import sourcemaps from 'rollup-plugin-sourcemaps';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import summary from 'rollup-plugin-summary';
 
@@ -10,12 +11,14 @@ export default {
     // Entry point for application build; can specify a glob to build multiple
     // HTML files for non-SPA app
     html({
-      input: 'public/index.html',
+      input: 'frontend/index.html',
+      extractAssets: false
     }),
-    // Resolve bare module specifiers to relative paths
-    resolve(),
     // Minify HTML template literals
     minifyHTML(),
+    sourcemaps(),,
+    // Resolve bare module specifiers to relative paths
+    resolve(),
     // Minify JS
     terser({
       ecma: 2020,
@@ -26,10 +29,16 @@ export default {
     summary(),
     // Optional: copy any static assets to build directory
     copy({
-      patterns: ['images/**/*'],
+      patterns: [
+        'img/*',
+        'fonts/**',
+        'css/*'
+      ],
+      rootDir: './frontend'
     }),
   ],
   output: {
+    sourcemap: false,
     dir: 'dist',
   },
   preserveEntrySignatures: 'strict',
