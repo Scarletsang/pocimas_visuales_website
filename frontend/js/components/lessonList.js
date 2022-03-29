@@ -83,7 +83,7 @@ export default class LessonList extends LitElement {
 
 class LessonListController extends ComponentController {
 
-  onStructureChange() {
+  onHashChange() {
     this.host.currentNodeId = this.nodeWalker.currentId;
     this.host.isInScope = true;
     let scopeId = this.nodeWalker.currentScope;

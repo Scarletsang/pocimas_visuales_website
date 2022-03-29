@@ -2,20 +2,12 @@ import { LitElement, css, html  } from "lit";
 import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import store from "../store";
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
+import ComponentController from "./componentController";
 
 export default class Lobby extends LitElement {
 
-  constructor() {
-    super();
-    let nextLessonBtnText = store.get("nodeWalker").currentNextLessonBtnText;
-    this.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    this.choiceContent = store.get("nodeWalker").currentChoices;
-    this.addEventListener("click", (event) => {
-      this.focusId = undefined;
-    }, true);
-  }
+  controller = new LobbyController(this);
 
   static properties = {
     nextLessonBtnText: {state: true},
@@ -98,6 +90,7 @@ export default class Lobby extends LitElement {
   ]
 
   render() {
+    console.log(this.choiceContent);
     return html`
       ${repeat(
         this.choiceContent,
@@ -132,5 +125,20 @@ export default class Lobby extends LitElement {
 
   nextLessonBtn(nextId) {
     return function() {window.location.hash = `#${nextId}`;}
+  }
+}
+
+class LobbyController extends ComponentController {
+  onHashChange() {
+    let nextLessonBtnText = this.nodeWalker.currentNextLessonBtnText;
+    this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
+    this.host.choiceContent = this.nodeWalker.currentChoices;
+  }
+
+  hostConnected() {
+    super.hostConnected();
+    this.host.addEventListener("click", (event) => {
+      this.host.focusId = undefined;
+    }, true);
   }
 }

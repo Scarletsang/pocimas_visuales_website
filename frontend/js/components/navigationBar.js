@@ -131,7 +131,7 @@ export default class NavigationBar extends LitElement {
 }
 
 class NavigationBarController extends ComponentController {
-  onStructureChange() {
+  onHashChange() {
     if (this.host.structure === "home") {
       this.host.startText = this.nodeWalker.currentStartText;
       this.host.startId   = this.nodeWalker.currentStartId;

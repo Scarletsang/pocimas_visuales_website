@@ -1,4 +1,5 @@
 import { LitElement, css, html  } from "lit";
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
 import ComponentController from "./componentController";
 
@@ -62,11 +63,6 @@ export default class PageContent extends LitElement {
     }
   `]
 
-  renderContent(content) {
-    if (!content) return ''
-    return document.createRange().createContextualFragment(content);
-  }
-
   renderNextLessonBtn() {
     if (this.isEndNode) return ''
     return html`
@@ -78,7 +74,7 @@ export default class PageContent extends LitElement {
 
   render() {
     return html`
-      <section class="lesson-content">${this.renderContent(this.content)}</section>
+      <section class="lesson-content">${unsafeHTML(this.content)}</section>
       ${this.renderNextLessonBtn()}
     `
   }
@@ -90,7 +86,7 @@ export default class PageContent extends LitElement {
 }
 
 class PageContentController extends ComponentController {
-  onStructureChange() {
+  onHashChange() {
     this.host.isEndNode = this.nodeWalker.isEndNode;
     let nextLessonBtnText = this.nodeWalker.currentNextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";

@@ -1,34 +1,26 @@
-import LessonList from "./components/lessonList";
-import NavigationBar from "./components/navigationBar";
-import PageContent from "./components/pageContent"
-import Page from "./components/page"
-import Lobby from "./components/lobby";
-import store from "./store";
-import NodeWalker from "./nodeWalker";
+import defineCustomElements from "./components";
+import store, {importDefaultDataToStore, importDataToStore} from "./store";
+import NodePointer from "./nodePointer";
 
 function main() {
+  importDefaultDataToStore();
   let pageId = window.location.hash.slice(1);
   if (!pageId) pageId = store.get("entryNodeId");
   // setup
-  nodesContext( nodesObj => {
-    const nodeWalker = NodeWalker.fromJSON(nodesObj, pageId);
-    store.set("nodeWalker", nodeWalker);
-    customElements.define('lesson-list', LessonList);
-    customElements.define('navigation-bar', NavigationBar);
-    customElements.define('page-content', PageContent);
-    customElements.define('page-element', Page);
-    customElements.define('lobby-element', Lobby);
+  nodesContext( jsonObj => {
+    importDataToStore(jsonObj);
+    defineCustomElements();
+    let nodePointer = new NodePointer(pageId);
     window.addEventListener('hashchange', (event) => {
       let pageId = window.location.hash.slice(1);
-      nodeWalker.teleport(pageId);
+      nodePointer.id = pageId;
     })
-    nodeWalker.teleport(pageId);
   });
 }
 
 function nodesContext(func) {
   fetchJSON("/data/data.json")
-  .then( nodesObj => func(nodesObj))
+  .then(data => func(data))
   .catch((err) => console.error("can't load nodes. Received error:", err));
 }
 

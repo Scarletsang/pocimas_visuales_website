@@ -1,22 +1,22 @@
-export default class EventDispatcher {
+export default class ComponentRenderer {
   constructor() {
-    this._events = [];
+    this._components = [];
     this._unresolved = new Map();
   }
 
   append(id, func) {
-    this._events.push({id: id, func: func});
+    this._components.push({id: id, func: func});
     if (this._unresolved.has(id)) this._resolve(id);
   }
 
   prepend(id, func) {
-    this._events.unshift({id: id, func: func});
+    this._components.unshift({id: id, func: func});
     if (this._unresolved.has(id)) this._resolve(id);
   }
 
   delete(id) {
-    let index = this._events.findIndex((event) => event.id == id);
-    if (index >= 0) this._events.splice(index, 1);
+    let index = this._components.findIndex((event) => event.id == id);
+    if (index >= 0) this._components.splice(index, 1);
   }
 
   _resolve(id) {
@@ -37,24 +37,24 @@ export default class EventDispatcher {
         this._unresolved.set(nextId, [eventObject]);
       }
     } else {
-      this._events.splice(index, 0, eventObject);
+      this._components.splice(index, 0, eventObject);
     }
   }
 
   insertBefore(nextId, id, func) {
-    let nextIdIndex = this._events.findIndex((event) => event.id == nextId);
+    let nextIdIndex = this._components.findIndex((event) => event.id == nextId);
     let eventObject = {mode: "before", id: id, func: func};
     this.insertAtIndex(nextIdIndex, eventObject);
   }
 
   insertAfter(lastId, id, func) {
-    let lastIdIndex = this._events.findIndex((event) => event.id == lastId);
+    let lastIdIndex = this._components.findIndex((event) => event.id == lastId);
     let eventObject = {mode: "after", id: id, func: func};
     this.insertAtIndex(lastIdIndex + 1, eventObject);
   }
 
-  dispatch() {
-    this._events.forEach(({id, func}) => func() );
+  render() {
+    this._components.forEach(({id, func}) => func() );
   }
 
 }

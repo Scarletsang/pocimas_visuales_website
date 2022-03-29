@@ -1,5 +1,4 @@
 import { LitElement, css, html  } from "lit";
-import { repeat } from 'lit/directives/repeat.js';
 import ComponentController from "./componentController";
 
 export default class Page extends LitElement {

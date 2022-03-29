@@ -19,15 +19,15 @@ export default class ComponentController {
     this.eventDispatcher = store.get("eventDispatcher");
   }
 
-  onStructureChange() {}
+  onHashChange() {}
   
   hostConnected() {
     let func = () => {
       this.host.structure = this.nodeWalker.currentStructure;
-      this.onStructureChange.call(this)
+      this.onHashChange.call(this)
     }
     this.eventDispatcher.append(this.id, func);
-    this.onStructureChange();
+    this.onHashChange();
   }
 
   hostDisconnected() {
