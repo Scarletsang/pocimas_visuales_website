@@ -1,4 +1,4 @@
-import store from "../store";
+import {global} from "../store";
 import { generateUID } from "../helpers";
 
 /**
@@ -12,25 +12,25 @@ export default class ComponentController {
     /** @property {String} id A unique id for each component */
     this.id = generateUID();
 
-    /** @property {NodeWalker} nodeWalker A reference to the singleton NodeWalker class */
-    this.nodeWalker = store.get("nodeWalker");
+    /** @property {NodePointer} nodePointer A reference to the singleton NodePointer class */
+    this.nodePointer = global.get("nodePointer");
 
-    /** @property {EventDispatcher} eventDispatcher A reference to the event dispatcher */
-    this.eventDispatcher = store.get("eventDispatcher");
+    /** @property {ComponentRenderer} componentRenderer A reference to the component renderer */
+    this.componentRenderer = store.get("componentRenderer");
   }
 
   onHashChange() {}
   
   hostConnected() {
     let func = () => {
-      this.host.structure = this.nodeWalker.currentStructure;
+      this.host.structure = this.nodePointer.node.structure;
       this.onHashChange.call(this)
     }
-    this.eventDispatcher.append(this.id, func);
+    this.componentRenderer.append(this.id, func);
     this.onHashChange();
   }
 
   hostDisconnected() {
-    this.eventDispatcher.delete(this.id);
+    this.componentRenderer.delete(this.id);
   }
 }

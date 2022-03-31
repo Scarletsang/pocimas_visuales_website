@@ -1,12 +1,11 @@
-import store from "../store";
+import {mappings} from "../store";
 import { constructSetMap } from "../helpers";
 
 export default class NodeData {
-  constructor(jsonObj, fieldNameForNextNode = store.get("nodeFields").nextIds) {
+  constructor(jsonObj) {
     const nodes = Object.entries(jsonObj);
     this._nodes = new Map(nodes);
     this._choiceNodes = new Map();
-    this.fieldNameForNextNode = fieldNameForNextNode;
     this._constructChoiceNodes(nodes);
   }
 
@@ -16,9 +15,8 @@ export default class NodeData {
 
   isChoiceNode(nodeId) { return this._choiceNodes.has(nodeId);}
 
-  getNodeByAttribute(node, attribute) {
+  getNodeAttribute(node, attribute) {
     let nodeObj = typeof node === "string" ? this.getNode(node) : node;
-    // console.log(node, nodeId);
     if (nodeObj) {
       if (!nodeObj.hasOwnProperty(attribute)) return null;
       return nodeObj[attribute];
@@ -28,7 +26,7 @@ export default class NodeData {
   
   isEndNode(node) {
     let nodeObj = typeof node === "string" ? this.getNode(node) : node;
-    if (nodeObj) return !nodeObj.hasOwnProperty(this.fieldNameForNextNode);
+    if (nodeObj) return !nodeObj.hasOwnProperty(mappings.get("nodeFields").nextIds);
     return nodeObj;
   }
   
@@ -37,7 +35,7 @@ export default class NodeData {
   }
 
   nextIdsOf(node) {
-    return this.getNodeByAttribute(node, this.fieldNameForNextNode);
+    return this.getNodeAttribute(node, mappings.get("nodeFields").nextIds);
   }
 
   nextNodesOf(node) {
@@ -46,7 +44,7 @@ export default class NodeData {
   }
 
   _constructChoiceNodes(nodes) {
-    const nextIdsField = store.get("nodeFields").nextIds;
+    const nextIdsField = mappings.get("nodeFields").nextIds;
     const extractFunction = (nodeObj) => {
       if (!nodeObj.hasOwnProperty(nextIdsField)) return [];
       let nextids = nodeObj[nextIdsField];

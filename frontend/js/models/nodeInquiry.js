@@ -1,10 +1,23 @@
+import {mappings} from "../store";
+
 /** @typedef {String} NodeId  ID of a node */
 /** @typedef {String} ScopeId ID of a scope */
 
-export default function getNodeInfo(nodeId, store) {
-  let nodeData = store.get("nodeData");
-  if (!nodeData.hasNode(nodeId)) return false;
-  return new Node(nodeId, nodeData, store.get("nodeScopes"));
+export default class NodeInquiry {
+  constructor(nodeData, nodeScopes) {
+    this.nodes = new Map();
+    this.nodeData = nodeData;
+    this.nodeScopes = nodeScopes;
+  }
+
+  get(nodeId) {
+    if (!this.nodeData.hasNode(nodeId)) return false;
+    if (this.nodes.has(nodeId)) return this.nodes.get(nodeId);
+    let node = new Node(nodeId, this.nodeData, this.nodeScopes);
+    this.nodes.set(nodeId, node);
+    return node;
+  }
+
 }
 
 class Node {
@@ -13,7 +26,19 @@ class Node {
     this._id = id;
     this.nodeData = nodeData;
     this.nodeScopes = nodeScopes;
-    if (this.constructor === Node) Object.freeze(this);
+    this.acessed = new Map();
+    return new Proxy(this, {get: this._proxyHandler, set: (_, _, _) => {}});
+  }
+
+  _proxyHandler(target, prop, receiver) {
+    // allow accessing the data with the mapped value
+    let fieldName = mappings.get("nodeFields")[prop];
+    if (fieldName) return this.nodeData.getNodeAttribute(this._id, fieldName);
+    // memorize accessed function
+    if (target.accessed.has(prop)) return target.accessed.get(prop);
+    let result = Reflect.get(...arguments);
+    target.accessed.set(prop, result);
+    return result;
   }
 
   /**
@@ -21,18 +46,18 @@ class Node {
    * @returns {NodeId}
    */
   get id() {return this._id;}
-
+  
   /**
-   * get this node's object
-   * @returns {NodeObject | undefined} data is structurally the same as the JSON from the server
+   * get this node's raw data, same as the data sent from the server
+   * @returns {NodeObject | undefined}
    */
-  get data() {return this.nodeData.getNode(this._id);}
+  get rawData() {return this.nodeData.getNode(this._id);}
 
   /**
    * get the all the scopes associated with this node
    * @returns {Set<ScopeId>|undefined}
    */
-  get scopes() {return this.nodeScopes.getScopeNamesByNodeId(this._id);}
+  get scopes() {return this.nodeScopes.getScopesByNodeId(this._id);}
 
   /**
    * check if this node follows any more nodes.
@@ -56,7 +81,7 @@ class Node {
    * check if this node is in any scope.
    * @returns {Boolean}
    */
-  get isInScope() {return this.nodeScopes.nodeIsInScope(this._id);}
+  get isInScope() {return this.nodeScopes.isInScope(this._id);}
 
   /**
    * get an array of the node IDs that follow this node.

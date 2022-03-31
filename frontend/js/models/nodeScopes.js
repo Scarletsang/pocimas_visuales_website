@@ -1,45 +1,41 @@
-import store from "../store";
+import {mappings} from "../store";
 import { constructSetMap } from "../helpers";
 
 export default class NodeScopes {
   constructor(jsonObj) {
     const scopes = Object.entries(jsonObj);
-    this._scopeById      = new Map(scopes);
-    this._scopesByHead   = new Map();
-    this._scopesByNodeId = new Map();
-    this._constructScopesByhead(scopes);
-    this._constructScopesByNodeId(scopes);
+    this._searchById     = new Map(scopes);
+    this._searchByHead   = new Map();
+    this._searchByNodeId = new Map();
+    this._constructSearchByhead(scopes);
+    this._constructSearchByNodeId(scopes);
   }
 
-  scopeExist(scopeId)  { return this._scopeById.has(scopeId); }
+  getScope(scopeId) { return this._searchById.get(scopeId); }
 
-  getScopeObj(scopeId) { return this._scopeById.get(scopeId); }
+  hasScope(scopeId)  { return this._searchById.has(scopeId); }
 
-  getScopeByAttribute(scopeId, attribute) {
-    return this.getScopeObj(scopeId)?.[attribute];
-  }
+  isInScope(nodeId) { return this._searchByNodeId.has(nodeId); }
 
-  nodeIsInScope(nodeId) { return this._scopesByNodeId.has(nodeId); }
-  
-  getScopeNamesByNodeId(nodeId)  { return this._scopesByNodeId.get(nodeId); }
+  IsScopeHead(nodeId) { return this._searchByHead.has(nodeId); }
 
-  nodeIsScopeHead(nodeId) { return this._scopesByHead.has(nodeId); }
+  getScopesByNodeId(nodeId)  { return this._searchByNodeId.get(nodeId); }
 
-  getScopeNamesByHeadId(nodeId) {return this._scopesByHead.get(nodeId); }
+  getScopesByHeadId(nodeId) {return this._searchByHead.get(nodeId); }
 
-  _constructScopesByhead(scopes) {
-    const headField = store.get("scopeFields").head;
+  _constructSearchByhead(scopes) {
+    const headField = mappings.get("scopeFields").head;
     const extractFunction = (scopeObj) => {
       return [scopeObj[headField]];
     }
-    constructSetMap(scopes, this._scopesByHead, extractFunction);
+    constructSetMap(scopes, this._searchByHead, extractFunction);
   }
 
-  _constructScopesByNodeId(scopes) {
-    const membersField = store.get("scopeFields").members;
+  _constructSearchByNodeId(scopes) {
+    const membersField = mappings.get("scopeFields").members;
     const extractFunction = (scopeObj) => {
       return scopeObj[membersField];
     };
-    constructSetMap(scopes, this._scopesByNodeId, extractFunction);
+    constructSetMap(scopes, this._searchByNodeId, extractFunction);
   }
 }

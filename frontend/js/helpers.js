@@ -34,3 +34,12 @@ export function constructSetMap(pairArray, targetMap, extractFunction) {
     }
   }
 }
+
+export function firstItemInSet(set) {let [first] = set; return first;}
+
+export function firstIntersectItem(set1, set2) {
+  for (const set1Item of set1) {
+    if (set2.has(set1Item)) return set1Item;
+  }
+  return false;
+}

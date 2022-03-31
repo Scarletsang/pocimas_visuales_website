@@ -1,16 +1,17 @@
 import defineCustomElements from "./components";
-import store, {importDefaultDataToStore, importDataToStore} from "./store";
+import {mappings, global, initStore, importDataToStore} from "./store";
 import NodePointer from "./nodePointer";
 
 function main() {
-  importDefaultDataToStore();
+  initStore();
   let pageId = window.location.hash.slice(1);
-  if (!pageId) pageId = store.get("entryNodeId");
+  if (!pageId) pageId = mappings.get("entryNodeId");
   // setup
   nodesContext( jsonObj => {
     importDataToStore(jsonObj);
     defineCustomElements();
     let nodePointer = new NodePointer(pageId);
+    global.set("nodePointer", nodePointer);
     window.addEventListener('hashchange', (event) => {
       let pageId = window.location.hash.slice(1);
       nodePointer.id = pageId;

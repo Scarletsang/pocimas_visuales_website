@@ -1,12 +1,15 @@
 import ComponentRenderer from "./componentRenderer";
+import NodeInquiry from "./models/nodeInquiry";
+import NodeData from "./models/nodeData";
+import NodeScopes from "./models/nodeScopes";
 
-let store;
-export default store = new Map();
+export const global   = new Map();
+export const mappings = new Map();
 
-export function importDefaultDataToStore() {
-  store.set("componentRenderer", new ComponentRenderer());
-  store.set("entryNodeId", "home");
-  store.set("nodeFields", {
+export function initStore() {
+  global.set("componentRenderer", new ComponentRenderer());
+  mappings.set("entryNodeId", "home");
+  mappings.set("nodeFields", {
     id: "id",
     structure: "structure",
     title: "title",
@@ -17,17 +20,21 @@ export function importDefaultDataToStore() {
     content: "html",
     choices: "choices"
   });
-  store.set("scopeFields", {
+  mappings.set("scopeFields", {
     head: "head",
     members: "members"
   });
-  store.set("dataJSONFields", {
+  mappings.set("dataJSONFields", {
     nodes: "nodes",
     scope: "scope"
   });
 }
 
 export function importDataToStore(jsonObj) {
-  store.set("nodeData", jsonObj[store.get("dataJSONFields").nodes]);
-  store.set("nodeScopes", jsonObj[store.get("dataJSONFields").scope]);
+  let nodeDataObj   = jsonObj[mappings.get("dataJSONFields").nodes];
+  let nodeScopesObj = jsonObj[mappings.get("dataJSONFields").scope];
+  let nodeData      = new NodeData(nodeDataObj);
+  let nodeScopes    = new NodeScopes(nodeScopesObj);
+  global.set("nodeScopes", nodeScopes);
+  global.set("nodeInquiry", new NodeInquiry(nodeData, nodeScopes));
 }
