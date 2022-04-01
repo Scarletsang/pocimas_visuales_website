@@ -43,3 +43,25 @@ export function firstIntersectItem(set1, set2) {
   }
   return false;
 }
+
+export function subArrayByItemValues(array, startValue, endValue) {
+  let result = [];
+  let i = 0;
+  while (i < array.length) {
+    let item = array[i];
+    i++;
+    if (item === startValue) {result.push(item); break;}
+  }
+  while (i < array.length) {
+    let item = array[i];
+    result.push(item);
+    if (item === endValue) break;
+    i++;
+  }
+  if (result.length < 1) return false;
+  return result;
+}
+
+export function removeItemFromArray(array, itemValue) {
+  return array.filter((item) => item != itemValue);
+}

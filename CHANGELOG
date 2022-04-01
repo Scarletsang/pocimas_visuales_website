@@ -1,3 +1,35 @@
+# V2
+
+Using lit js to manage web components. To compromise this change which facilitates data-driven rendering, the backend is rendering the website data in JSON.
+
+Frontend has been splitted into the following parts:
+
+## nodePointer.js
+
+The core class. A singleton class controlling the current node of the website. This is the class that interfaces with the web componenets. Every function here can be used in the web components.
+
+## nodeWalker.js
+
+A private class responsible for calculating the path that the nodes can be walked. It traverses (walks) the nodes to make certain decisions. This class is called by nodePointer class.
+
+## /components
+
+contains all code related to web components.
+
+**componentController.js**: provide a base for the web component to update when the url hash is changed.
+
+## /models
+
+contains all the interface that grab data from the raw JSON.
+
+**nodeInquiry.js**: A public interface to get information of a node.
+
+**nodeData.js**: A private interface to get information from the original data related to the content.
+
+**nodeScopes.js**: A private interface to get information about the scope of the nodes.
+
+# V1
+
 Before 14 February (Unrecorded date)
 - *Backend*: 
 	- wrote a custom markdown plugin for the kramdown markdown parser to process received markdown documents into html.

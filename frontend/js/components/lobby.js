@@ -90,7 +90,6 @@ export default class Lobby extends LitElement {
   ]
 
   render() {
-    console.log(this.choiceContent);
     return html`
       ${repeat(
         this.choiceContent,
@@ -130,9 +129,9 @@ export default class Lobby extends LitElement {
 
 class LobbyController extends ComponentController {
   onHashChange() {
-    let nextLessonBtnText = this.nodeWalker.currentNextLessonBtnText;
+    let nextLessonBtnText = this.nodePointer.data.nextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    this.host.choiceContent = this.nodeWalker.currentChoices;
+    this.host.choiceContent = this.nodePointer.data.choices;
   }
 
   hostConnected() {

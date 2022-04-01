@@ -1,4 +1,4 @@
-import { LitElement, css, html  } from "lit";
+import { LitElement, css, html } from "lit";
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
 import ComponentController from "./componentController";
@@ -87,11 +87,11 @@ export default class PageContent extends LitElement {
 
 class PageContentController extends ComponentController {
   onHashChange() {
-    this.host.isEndNode = this.nodeWalker.isEndNode;
-    let nextLessonBtnText = this.nodeWalker.currentNextLessonBtnText;
+    this.host.isEndNode = this.nodePointer.data.isEndNode;
+    let nextLessonBtnText = this.nodePointer.data.nextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    let content = this.nodeWalker.currentContent;
-    this.host.nextId  = this.nodeWalker.nextIds?.at(0);
+    let content = this.nodePointer.data.content;
+    this.host.nextId  = this.nodePointer.data.nextIds?.[0];
     this.host.content = content ? content : "";
   }
 }

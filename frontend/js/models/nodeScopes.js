@@ -1,4 +1,4 @@
-import {mappings} from "../store";
+import { mappings } from "../store";
 import { constructSetMap } from "../helpers";
 
 export default class NodeScopes {

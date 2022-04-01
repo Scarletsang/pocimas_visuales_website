@@ -1,7 +1,4 @@
 import ComponentRenderer from "./componentRenderer";
-import NodeInquiry from "./models/nodeInquiry";
-import NodeData from "./models/nodeData";
-import NodeScopes from "./models/nodeScopes";
 
 export const global   = new Map();
 export const mappings = new Map();
@@ -28,13 +25,4 @@ export function initStore() {
     nodes: "nodes",
     scope: "scope"
   });
-}
-
-export function importDataToStore(jsonObj) {
-  let nodeDataObj   = jsonObj[mappings.get("dataJSONFields").nodes];
-  let nodeScopesObj = jsonObj[mappings.get("dataJSONFields").scope];
-  let nodeData      = new NodeData(nodeDataObj);
-  let nodeScopes    = new NodeScopes(nodeScopesObj);
-  global.set("nodeScopes", nodeScopes);
-  global.set("nodeInquiry", new NodeInquiry(nodeData, nodeScopes));
 }

@@ -1,4 +1,4 @@
-import {mappings} from "../store";
+import { mappings } from "../store";
 
 /** @typedef {String} NodeId  ID of a node */
 /** @typedef {String} ScopeId ID of a scope */
@@ -26,14 +26,14 @@ class Node {
     this._id = id;
     this.nodeData = nodeData;
     this.nodeScopes = nodeScopes;
-    this.acessed = new Map();
-    return new Proxy(this, {get: this._proxyHandler, set: (_, _, _) => {}});
+    this.accessed = new Map();
+    return new Proxy(this, {get: this._proxyHandler, set: () => {}});
   }
 
   _proxyHandler(target, prop, receiver) {
     // allow accessing the data with the mapped value
     let fieldName = mappings.get("nodeFields")[prop];
-    if (fieldName) return this.nodeData.getNodeAttribute(this._id, fieldName);
+    if (fieldName) return target.nodeData.getNodeAttribute(target._id, fieldName);
     // memorize accessed function
     if (target.accessed.has(prop)) return target.accessed.get(prop);
     let result = Reflect.get(...arguments);
@@ -69,7 +69,7 @@ class Node {
    * check if this node diverges into more nodes.
    * @returns {Boolean}
    */
-  get isLobbyNode() {return this.nodeData.isLobbyNode(this_id);}
+  get isLobbyNode() {return this.nodeData.isLobbyNode(this.id);}
 
   /**
    * check if this node diverges from any node.

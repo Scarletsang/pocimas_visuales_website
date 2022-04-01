@@ -1,4 +1,4 @@
-import {mappings} from "../store";
+import { mappings } from "../store";
 import { constructSetMap } from "../helpers";
 
 export default class NodeData {
@@ -31,7 +31,7 @@ export default class NodeData {
   }
   
   isLobbyNode(node) {
-    return !this.isEndNode(node) && (this.nextIdsOf(node)?.length > 1);
+    return this.nextIdsOf(node)?.length > 1;
   }
 
   nextIdsOf(node) {

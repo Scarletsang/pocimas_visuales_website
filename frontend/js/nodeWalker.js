@@ -1,5 +1,5 @@
-import {global, mappings} from "./store";
-import { firstItemInSet, firstIntersectItem} from "./helpers";
+import { global, mappings } from "./store";
+import { firstItemInSet, firstIntersectItem, subArrayByItemValues } from "./helpers";
 
 export default class NodeWalker {
   constructor(root) {
@@ -14,11 +14,20 @@ export default class NodeWalker {
     let node = this.nodeInquiry.get(nodeId);
     if (!node) return false;
     let lastNode = this.nodeInquiry.get(this.walked.slice(-1)[0]);
-    if (lastNode.nextIds?.includes(nodeId)) {
+    let index = this.walked.indexOf(nodeId);
+    if (index != -1) {
+      this.walked = this.walked.slice(0, index + 1);
+      this.chose = this.chose.filter((choice) => {
+        return this.walked.includes(choice);
+      });
+    }
+    else if (lastNode.nextIds?.includes(nodeId)) {
       this.walked.push(nodeId);
       if (lastNode.isLobbyNode) this.chose.push(nodeId);
-    } else {
-      let result = this.walkFromTo(root, nodeId);
+    }
+    else {
+      // generate default route
+      let result = this.walkFromTo(this.root, nodeId);
       if (!result) return false;
       this.walked = result.walked;
       this.chose = result.chose;
@@ -35,8 +44,9 @@ export default class NodeWalker {
   }
 
   walkFromTo(fromId, destId, walked = [], chose = [], originalChose = Array.from(this.chose)) {
-    let destId = this.nodeInquiry.get(destId);
+    let dest = this.nodeInquiry.get(destId);
     if (!dest) return false;
+    walked.push(fromId);
     if (fromId === destId) return {walked: walked, chose: chose};
     let nodeId = fromId;
     while (true) {
@@ -53,20 +63,20 @@ export default class NodeWalker {
       walked.push(choiceNodeId);
       chose.push(choiceNodeId);
       if (choiceNodeId === destId) return {walked: walked, chose: chose};
-      return this.walkFromTo(nextNodeId, destId, walked, chose, originalChose);
+      return this.walkFromTo(choiceNodeId, destId, Array.from(walked), Array.from(chose), Array.from(originalChose));
     }
     for (const id of node.nextIds) {
       if (walked.includes(id)) continue;
-      let result = this.walkFromTo(nodeId, destId, walked, chose, originalChose);
+      let result = this.walkFromTo(id, destId, Array.from(walked), Array.from(chose), Array.from(originalChose));
       if (result) return result;
     }
     return false;
   }
 
-  walkInScopeTo(scopeId, destId) {
+  walkedPathInScope(scopeId, nodeId) {
     let scopeHeadId = this.nodeScopes.getScope(scopeId)?.[mappings.get("scopeFields").head];
     if (!scopeHeadId) return false;
-    return this.walkFromTo(scopeHeadId, destId);
+    return subArrayByItemValues(this.walked, scopeHeadId, nodeId);
   }
 
   chooseScope(nodeId) {

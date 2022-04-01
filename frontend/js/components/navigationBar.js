@@ -1,5 +1,5 @@
 import { LitElement, css, html} from 'lit';
-import store from "../store";
+import { mappings } from "../store";
 import ComponentController from './componentController';
 
 export default class NavigationBar extends LitElement {
@@ -126,15 +126,15 @@ export default class NavigationBar extends LitElement {
   }
 
   iconBtn() {
-    window.location.hash = `#${store.get("entryNodeId")}`
+    window.location.hash = `#${mappings.get("entryNodeId")}`
   }
 }
 
 class NavigationBarController extends ComponentController {
   onHashChange() {
     if (this.host.structure === "home") {
-      this.host.startText = this.nodeWalker.currentStartText;
-      this.host.startId   = this.nodeWalker.currentStartId;
+      this.host.startText = this.nodePointer.data.startText;
+      this.host.startId   = this.nodePointer.data.startId;
     }
   }
 }

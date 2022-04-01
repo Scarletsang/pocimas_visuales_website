@@ -1,4 +1,4 @@
-import {global} from "../store";
+import { global } from "../store";
 import { generateUID } from "../helpers";
 
 /**
@@ -16,14 +16,14 @@ export default class ComponentController {
     this.nodePointer = global.get("nodePointer");
 
     /** @property {ComponentRenderer} componentRenderer A reference to the component renderer */
-    this.componentRenderer = store.get("componentRenderer");
+    this.componentRenderer = global.get("componentRenderer");
   }
 
   onHashChange() {}
   
   hostConnected() {
     let func = () => {
-      this.host.structure = this.nodePointer.node.structure;
+      this.host.structure = this.nodePointer.data.structure;
       this.onHashChange.call(this)
     }
     this.componentRenderer.append(this.id, func);

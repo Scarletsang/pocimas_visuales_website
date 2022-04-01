@@ -1,5 +1,8 @@
 import defineCustomElements from "./components";
-import {mappings, global, initStore, importDataToStore} from "./store";
+import NodeInquiry from "./models/nodeInquiry";
+import NodeData from "./models/nodeData";
+import NodeScopes from "./models/nodeScopes";
+import { global, mappings, initStore } from "./store";
 import NodePointer from "./nodePointer";
 
 function main() {
@@ -9,14 +12,24 @@ function main() {
   // setup
   nodesContext( jsonObj => {
     importDataToStore(jsonObj);
-    defineCustomElements();
-    let nodePointer = new NodePointer(pageId);
+    let nodePointer = new NodePointer();
     global.set("nodePointer", nodePointer);
+    defineCustomElements();
     window.addEventListener('hashchange', (event) => {
       let pageId = window.location.hash.slice(1);
       nodePointer.id = pageId;
     })
+    nodePointer.id = pageId;
   });
+}
+
+function importDataToStore(jsonObj) {
+  let nodeDataObj   = jsonObj[mappings.get("dataJSONFields").nodes];
+  let nodeScopesObj = jsonObj[mappings.get("dataJSONFields").scope];
+  let nodeData      = new NodeData(nodeDataObj);
+  let nodeScopes    = new NodeScopes(nodeScopesObj);
+  global.set("nodeScopes", nodeScopes);
+  global.set("nodeInquiry", new NodeInquiry(nodeData, nodeScopes));
 }
 
 function nodesContext(func) {
