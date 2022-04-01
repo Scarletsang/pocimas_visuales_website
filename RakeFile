@@ -1,4 +1,5 @@
 require_relative 'backend/paths.rb'
+require_relative 'backend/renderer.rb'
 
 desc "init rollup js compilation server for development"
 task :rollup do
@@ -9,4 +10,10 @@ desc "generate JSdoc"
 task :jsdoc do
   include Paths
   system("./node_modules/.bin/jsdoc", "#{PUBLIC_FOLDER}/js", "-r", "-d", DOCUMENTATION_FOLDER)
+end
+
+desc "render data.json"
+task :data do
+  include Paths
+  Renderer.compile_data_json_to(DATA_FOLDER, NODES_CONNECTION_YAML, SCOPE_YAML)
 end

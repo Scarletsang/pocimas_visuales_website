@@ -1,6 +1,6 @@
 {
   "name": "pocima_visual_02",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "This is a website made exclusively for the art project **Pócima visual 02: Estando aquí no estoy, estoy.** organized by Cristina Maldonado. This is a documentation of my process of designing the website appearance, coding it and mangaging the website.",
   "main": "frontend/js/main.js",
   "directories": {
