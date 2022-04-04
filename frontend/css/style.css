@@ -25,6 +25,10 @@
   overflow: hidden;
 }
 
+/* Media popup*/
+
+.hide {display: none;}
+
 /* side by side wiget (left and right tag) */
 
 .side-by-side {
@@ -78,49 +82,7 @@
 .pdf-title {
 }
 
-/* Media popup*/
 
-.hide {
-  display: none;
-}
-
-#popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.5);
-  z-index: 3;
-}
-
-#popup-image, #popup-pdf {
-  width: 100%;
-  padding: 3rem calc(3rem + var(--border-width)) 0 calc(3rem + var(--border-width));
-  height: calc(100% - 6rem);
-  object-fit: contain;
-  box-sizing: border-box;
-}
-
-#popup-pdf {
-  height: 100vh;
-  padding-bottom: 3rem;
-}
-
-#popup-image-text {
-  text-align: center;
-  margin-top: 0;
-  margin-right: var(--border-width);
-  color: white;
-  font: normal normal 1rem "Mali", sans-serif;
-}
-
-#close-popup-btn {
-  position: absolute;
-  top: var(--border-width);
-  right: var(--border-width);
-  width: 3rem;
-}
 
 /* Structure Content */
 

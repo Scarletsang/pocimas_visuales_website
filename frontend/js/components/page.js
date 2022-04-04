@@ -150,5 +150,6 @@ export default class Page extends LitElement {
 
   horizontalScroll(event) {
     event.currentTarget.scrollLeft += event.deltaY;
+    console.log(event.currentTarget.scrollLeft);
   }
 }

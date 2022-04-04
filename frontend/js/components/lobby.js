@@ -91,6 +91,7 @@ export default class Lobby extends LitElement {
 
   render() {
     return html`
+      
       ${repeat(
         this.choiceContent,
         (choice) => choice,
