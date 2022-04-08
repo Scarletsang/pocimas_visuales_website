@@ -79,6 +79,7 @@ export default class Page extends LitElement {
 
     :host([structure=choice]) .content {
       width: unset;
+      min-width: calc(100% - var(--border-width));
       top: 0;
       height: 100%;
       padding-left: 0;
