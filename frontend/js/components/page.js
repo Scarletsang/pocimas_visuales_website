@@ -2,15 +2,17 @@ import { LitElement, css, html } from "lit";
 import ComponentController from "./componentController";
 
 export default class Page extends LitElement {
-  controller = new ComponentController(this);
+  controller = new PageController(this);
 
   static properties = {
-    structure: {reflect: true}
+    structure: {reflect: true},
+    navStructure: {state: true},
+    coverImage: {state: true}
   }
 
   static styles = css`
     /* default structure: content */
-    ::slotted( navigation-bar ){
+    navigation-bar {
       top: 50%;
       left: var(--border-width);
       width: var(--nav-width);
@@ -49,13 +51,13 @@ export default class Page extends LitElement {
 
     /* structure: home */
     
-    :host([structure=home]) ::slotted( navigation-bar ){
+    :host([structure=home]) navigation-bar {
       width: 25rem;
       margin: 0;
       border: var(--focus-border);
     }
     
-    ::slotted( img[slot="cover-image"] ) {
+    #cover-image {
       position: absolute;
       top: 50%;
       left: 0;
@@ -85,7 +87,7 @@ export default class Page extends LitElement {
 
     /* structure: cinema */
     
-    :host([structure=cinema]) ::slotted( navigation-bar ){
+    :host([structure=cinema]) navigation-bar {
       top: 0;
       left: 0;
       transform: translate(0, 0);
@@ -107,27 +109,43 @@ export default class Page extends LitElement {
 
   homePage() {
     return html`
-      <slot name="navigation-bar"></slot>
-      <slot name="cover-image"></slot>
-    `
+      ${this.renderNavigationBar()}
+      <img id="cover-image" src=${this.coverImage}>
+      `
   }
   
   contentPage() {
     return html`
-      <slot name="navigation-bar"></slot>
+      ${this.renderNavigationBar()}
       <div id="page-content-wrapper">
         <page-content class="content" structure="${this.structure}"></page-content>
       </div>
-    `
+      `
   }
 
   choicePage() {
     return html`
-      <slot name="navigation-bar"></slot>
+      ${this.renderNavigationBar()}
       <div id="page-content-wrapper" @wheel=${this.horizontalScroll}>
         <lobby-element class="content" ></lobby-element>
       </div>
     `
+  }
+
+  resourcePage() {
+    return html`
+      ${this.renderNavigationBar()}
+      <div id="page-content-wrapper">
+        <resource-content class="content" ></resource-content>
+      </div>
+    `
+  }
+
+  renderNavigationBar() {
+    let navStructure = this.navStructure ? this.navStructure : this.structure;
+    return html`
+      <navigation-bar structure=${navStructure}></navigation-bar>
+    `;
   }
   
   render() {
@@ -136,6 +154,8 @@ export default class Page extends LitElement {
         return this.homePage();
       case "choice":
         return this.choicePage();
+      case "resource":
+        return this.resourcePage();
       default:
         return this.contentPage();
     }
@@ -150,6 +170,16 @@ export default class Page extends LitElement {
 
   horizontalScroll(event) {
     event.currentTarget.scrollLeft += event.deltaY;
-    console.log(event.currentTarget.scrollLeft);
+  }
+}
+
+class PageController extends ComponentController {
+  onHashChange() {
+    this.host.structure = this.nodePointer.attr.structure;
+    this.host.navStructure = this.nodePointer.attr.navStructure;
+    if (this.host.structure == "home") {
+      console.log(this.nodePointer.attr);
+      this.host.coverImage = this.nodePointer.attr.coverImage;
+    }
   }
 }

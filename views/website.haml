@@ -22,10 +22,4 @@
       %script{:src => "js/#{js_name}", :type => "module"}
     %title= title
   %page-element
-    %img{:slot => "cover-image", :src => cover_image_url}
-    %navigation-bar{:slot => "navigation-bar"}
-      %h1{:slot => "website-icon-text"} Pócima Visual 02_
-      %h1{:slot => "website-icon-text"} estando aquí no estoy estoy
-      %hr{:slot => "website-icon-text"}
-      %h1{:slot => "website-icon-text"} Escuela de espiritismo tecnológico
-  %media-popup
+  %media-popup.hide

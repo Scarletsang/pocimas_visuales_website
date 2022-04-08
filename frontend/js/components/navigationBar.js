@@ -1,4 +1,5 @@
 import { LitElement, css, html} from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { mappings } from "../store";
 import ComponentController from './componentController';
 
@@ -9,7 +10,8 @@ export default class NavigationBar extends LitElement {
   static properties = {
     structure: {reflect: true},
     startText: {state: true},
-    startId:   {state: true}
+    startId:   {state: true},
+    homeTitle: {state: true}
   }
 
   static styles = css`
@@ -50,27 +52,27 @@ export default class NavigationBar extends LitElement {
       background: url("/img/logo_02.svg") no-repeat;
     }
 
-    slot {
+    #home-title {
       display: block;
       margin-bottom: 2rem;
     }
 
-    ::slotted(h1:nth-child(1)) {
+    #home-title h1:nth-child(1) {
       font-size: 3rem;
       margin-bottom: 0;
     }
 
-    ::slotted(h1:nth-child(2)) {
+    #home-title h1:nth-child(2) {
       font-size: 1rem;
     }
 
-    ::slotted(hr:nth-child(3)) {
+    #home-title hr:nth-child(3) {
       margin-bottom: 0;
       margin-top: 24px;
       border: 1px solid var(--theme-color);
     }
 
-    ::slotted(h1:nth-child(4)) {
+    #home-title h1:nth-child(4) {
       margin: 0;
       font-size: 1rem;
       font-style: italic;
@@ -89,7 +91,7 @@ export default class NavigationBar extends LitElement {
 
   homePage() {
     return html`
-      <slot name= "website-icon-text"></slot>
+      <div id="home-title">${unsafeHTML(this.homeTitle)}</div>
       <lesson-list structure="${this.structure}"></lesson-list>
       <button id="start-btn" type="button" @click="${this.startBtn}">
         <h1>${this.startText}</h1>
@@ -133,8 +135,9 @@ export default class NavigationBar extends LitElement {
 class NavigationBarController extends ComponentController {
   onHashChange() {
     if (this.host.structure === "home") {
-      this.host.startText = this.nodePointer.data.startText;
-      this.host.startId   = this.nodePointer.data.startId;
+      this.host.startText = this.nodePointer.attr.startText;
+      this.host.startId   = this.nodePointer.attr.startId;
+      this.host.homeTitle = this.nodePointer.attr.content;
     }
   }
 }
