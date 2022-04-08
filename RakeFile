@@ -2,7 +2,7 @@ require_relative 'backend/paths.rb'
 require_relative 'backend/renderer.rb'
 
 desc "init rollup js compilation server for development"
-task :rollup do
+task :watch do
   system("rollup --config rollup.config.dev.js -w")
 end
 
@@ -16,4 +16,32 @@ desc "render data.json"
 task :data do
   include Paths
   Renderer.compile_data_json_to(DATA_FOLDER, NODES_CONNECTION_YAML, SCOPE_YAML)
+end
+
+desc "render website HTML"
+task :html do
+  include Paths
+  Renderer.compile_website_to(PUBLIC_FOLDER, WEBSITE_META_YAML)
+end
+
+desc "compile dev files"
+task :dev => [:data, :html] do
+  system("rm -rf dist/")
+  system("rollup --config rollup.config.dev.js")
+end
+
+desc "compile production files"
+task :prod => [:data, :html] do
+  system("rm -rf dist/")
+  system("rollup --config rollup.config.prod.js")
+end
+
+desc "push to production server"
+task :push => :prod do
+  dest = "../production"
+  system("rm", "-rf", "#{dest}/dist", "#{dest}/backend", "#{dest}/data")
+  system("cp", "-fRv", "dist", dest)
+  system("cp", "-fRv", "backend", dest)
+  system("cp", "-fRv", "data", dest)
+  system("cp", "Gemfile", "Gemfile.lock", dest)
 end
