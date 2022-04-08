@@ -21,7 +21,7 @@ export default class MediaPopup extends LitElement {
         z-index: 3;
       }
 
-      [image], [pdf] {
+      [image], [pdf], [vimeo] {
         width: 100%;
         padding: 3rem calc(3rem + var(--border-width)) 0 calc(3rem + var(--border-width));
         height: calc(100% - 6rem);
@@ -63,13 +63,21 @@ export default class MediaPopup extends LitElement {
     return html`
       <img image src=${this.src}>
       <p description>${this.description}</p>
-    `;
+      `;
+  }
+  
+  renderVimeo() {
+    return html`
+      <iframe vimeo src="https://player.vimeo.com/video/${this.src}?h=f6ac9fdd61&color=5BA7AE&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      <p description>${this.description}</p>
+      `;
   }
 
   render() {
     let element;
-    if (this.type == "pdf") element = renderPDF();
-    if (this.type == "image") element = renderImage();
+    if (this.type == "pdf") element = this.renderPDF();
+    if (this.type == "image") element = this.renderImage();
+    if (this.type == "vimeo") element = this.renderVimeo();
     return html`
       ${element}
       <button id="close-popup-btn" type="button" @click=${this.closePopupBtn}>

@@ -65,3 +65,26 @@ export function subArrayByItemValues(array, startValue, endValue) {
 export function removeItemFromArray(array, itemValue) {
   return array.filter((item) => item != itemValue);
 }
+
+export function setAttributes(element, attributes) {
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (key === "class") {
+      element.classList.add(value);
+      return ;
+    }
+
+    if (key === "dataset") {
+      Object.entries(value).forEach(([dataKey, dataValue]) => {
+        element.dataset[dataKey] = dataValue;
+      });
+      return ;
+    }
+
+    if (key === "text") {
+      element.textContent = value;
+      return ;
+    }
+
+    element.setAttribute(key, value);
+  });
+}

@@ -39,6 +39,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
     super
     @block_parsers.unshift(:gallery_tag)
     @block_parsers.unshift(:video_tag)
+    @block_parsers.unshift(:vimeo_tag)
     @block_parsers.unshift(:audio_tag)
     @block_parsers.unshift(:pdf_tag)
     @block_parsers.unshift(:section_tag)
@@ -54,6 +55,21 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
     wrapper = Element.new(:html_element, "div", class: "gallery")
     parse_blocks(wrapper, @src.captures[0])
     @tree.children << wrapper
+  end
+
+  VIMEO_STRING = "![vimeo]("
+  VIMEO_TAG_REGEX = /\!\[vimeo\]\(([0-9]+)\)/
+
+  def parse_vimeo_tag
+    @src.pos += @src.matched_size
+    iframe_attr = {
+      src: "https://player.vimeo.com/video/#{@src.captures[0]}?h=f6ac9fdd61&color=5BA7AE&byline=0&portrait=0",
+      class: "video",
+      frameborder: "0",
+      allow: "autoplay; fullscreen; picture-in-picture",
+      allowfullscreen: ""
+    }
+    @tree.children << Element.new(:html_element, "iframe", iframe_attr)
   end
   
   VIDEO_STRING = "!["
@@ -139,6 +155,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
 
   define_parser(:gallery_tag, GALLERY_TAG_REGEX, GALLERY_STRING)
   define_parser(:video_tag, VIDEO_TAG_REGEX, VIDEO_STRING)
+  define_parser(:vimeo_tag, VIMEO_TAG_REGEX, VIMEO_STRING)
   define_parser(:audio_tag, AUDIO_TAG_REGEX, AUDIO_STRING)
   define_parser(:pdf_tag, PDF_TAG_REGEX, PDF_STRING)
   define_parser(:section_tag, SECTION_TAG_REGEX, SECTION_STRING)
