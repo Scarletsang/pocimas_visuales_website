@@ -11,7 +11,7 @@ export default class NodePointer {
 
   get id() {return this._id;}
 
-  get data() {return this.nodeInquiry.get(this._id);}
+  get attr() {return this.nodeInquiry.get(this._id);}
 
   get scope() {return this.nodeWalker.chooseScope(this._id);}
   

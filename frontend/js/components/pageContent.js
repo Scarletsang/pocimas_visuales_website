@@ -27,6 +27,7 @@ export default class PageContent extends LitElement {
 
     .lesson-content {
       min-height: 100%;
+      width: 100%;
       border: var(--focus-border);
       box-sizing: border-box;
       padding: 2rem;
@@ -34,6 +35,12 @@ export default class PageContent extends LitElement {
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
+    }
+
+    .lesson-content .video {
+      overflow: hidden;
+      width: 100%;
+      height: calc(100vh - 2 * (var(--border-width) + 2rem));
     }
 
     .lesson-content > * {
@@ -47,8 +54,7 @@ export default class PageContent extends LitElement {
     }
 
     #next-lesson-btn > h1 {
-      margin: 0;
-      margin-top: 1rem;
+      margin: 1rem 0;
     }
 
     /* structure: cinema */
@@ -87,11 +93,11 @@ export default class PageContent extends LitElement {
 
 class PageContentController extends ComponentController {
   onHashChange() {
-    this.host.isEndNode = this.nodePointer.data.isEndNode;
-    let nextLessonBtnText = this.nodePointer.data.nextLessonBtnText;
+    this.host.isEndNode = this.nodePointer.attr.isEndNode;
+    let nextLessonBtnText = this.nodePointer.attr.nextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    let content = this.nodePointer.data.content;
-    this.host.nextId  = this.nodePointer.data.nextIds?.[0];
+    let content = this.nodePointer.attr.content;
+    this.host.nextId  = this.nodePointer.attr.nextIds?.[0];
     this.host.content = content ? content : "";
   }
 }

@@ -9,13 +9,15 @@ export function initStore() {
   mappings.set("nodeFields", {
     id: "id",
     structure: "structure",
+    navStructure: "nav",
     title: "title",
     nextLessonBtnText: "nextLessonBtnText",
     nextIds: "nextIds",
     startId: "startId",
     startText: "startText",
+    coverImage: "coverImage",
     content: "html",
-    choices: "choices"
+    data: "data"
   });
   mappings.set("scopeFields", {
     head: "head",

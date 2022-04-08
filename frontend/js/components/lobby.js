@@ -1,7 +1,7 @@
 import { LitElement, css, html  } from "lit";
-import { repeat } from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { repeat } from "./helpers";
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
 import ComponentController from "./componentController";
 
@@ -76,6 +76,10 @@ export default class Lobby extends LitElement {
         text-align: center;
       }
 
+      .front li {
+        text-align: left;
+      }
+
       .back {
         transform: rotateY(180deg);
       }
@@ -86,32 +90,27 @@ export default class Lobby extends LitElement {
         bottom: var(--border-width);
         width: 100%;
       }
+
+      img {max-height: 50%;}
     `
   ]
 
   render() {
-    return html`
-      
-      ${repeat(
-        this.choiceContent,
-        (choice) => choice,
-        (choice, index) => {
-          return html`
-            <div class="card">
-              <div class=${classMap({flip: choice.id == this.focusId, wrapper: true})} @click=${this.focusCard(choice.id)}>
-                <div class="front">${unsafeHTML(choice.front)}</div>
-                <div class="back">
-                  ${unsafeHTML(choice.back)}
-                  <button class="next-lesson-btn" type="button" @click=${this.nextLessonBtn(choice.id)}>
-                    <h1>${this.nextLessonBtnText}</h1>
-                  </button>
-                </div>
-              </div>
+    return repeat(this.choiceContent, (choice) => {
+      return html`
+        <div class="card">
+          <div class=${classMap({flip: choice.id == this.focusId, wrapper: true})} @click=${this.focusCard(choice.id)}>
+            <div class="front">${unsafeHTML(choice.front)}</div>
+            <div class="back">
+              ${unsafeHTML(choice.back)}
+              <button class="next-lesson-btn" type="button" @click=${this.nextLessonBtn(choice.id)}>
+                <h1>${this.nextLessonBtnText}</h1>
+              </button>
             </div>
-          `
-        }
-      )}
-    `
+          </div>
+        </div>
+      `
+    });
   }
 
   focusCard(id) {
@@ -130,9 +129,9 @@ export default class Lobby extends LitElement {
 
 class LobbyController extends ComponentController {
   onHashChange() {
-    let nextLessonBtnText = this.nodePointer.data.nextLessonBtnText;
+    let nextLessonBtnText = this.nodePointer.attr.nextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    this.host.choiceContent = this.nodePointer.data.choices;
+    this.host.choiceContent = this.nodePointer.attr.data;
   }
 
   hostConnected() {

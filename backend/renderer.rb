@@ -94,7 +94,7 @@ class Nodes
       choice["back"] = render_markdown(choice["back"])
       choice
     end
-    node_meta["choices"] = choices
+    node_meta["data"] = choices
   end
 
   def render_normal_node markdown, node_meta

@@ -77,7 +77,7 @@ class LessonListController extends ComponentController {
 
   onHashChange() {
     this.host.currentNodeId = this.nodePointer.id;
-    this.host.isInScope = this.nodePointer.data.isInScope;
+    this.host.isInScope = this.nodePointer.attr.isInScope;
     if (!this.host.isInScope) {this.normalRendering(); return;}
     let nodeArray = this.nodePointer.walkedInScope;
     if (!nodeArray) {this.normalRendering(); return;}

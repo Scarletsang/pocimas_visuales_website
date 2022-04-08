@@ -23,7 +23,6 @@ export default class ComponentController {
   
   hostConnected() {
     let func = () => {
-      this.host.structure = this.nodePointer.data.structure;
       this.onHashChange.call(this)
     }
     this.componentRenderer.append(this.id, func);
