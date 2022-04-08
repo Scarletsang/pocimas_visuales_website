@@ -108,28 +108,6 @@ main {
   z-index: 1;
 }
 
-/* Structure: Resource */
-
-body.resource-view .lesson-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  min-width: 100%;
-  margin: -1rem;
-  flex-wrap: wrap;
-  border: none;
-  width: 100%;
-  padding: 0;
-}
-
-body.resource-view .lesson-content > * {
-  width: 18rem;
-  height: 18rem;
-  margin: 1rem;
-  padding: 2rem;
-  border: var(--focus-border);
-}
-
 /* Inner content styles */
 
 iframe#conjure-project {
