@@ -21,15 +21,20 @@ class ChoiceNode
       \[front\]
       (?<front>(?:(?!\[back\])(?!={3,}\s*)(?:.|\n))*)
       (?:={3,}\s*|\z)
+      |
+      \[front\]
+      (?<front>(?:(?!={3,}\s*)(?:.|\n))*)
+      (?:={3,}\s*|\z)
     /x
     choice_ids.map do |id|
       return if @str.eos?
       @str.scan_until(regex)
+      @str.inspect
       next if !@str.captures
       choice = {}
       choice["id"] = id
       choice["front"] = @str[:front]
-      choice["back"]  = @str[:back]
+      choice["back"]  = @str[:back] if @str[:back]
       choice
     end
   end

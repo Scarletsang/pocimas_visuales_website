@@ -91,7 +91,7 @@ class Nodes
     raw = ChoiceNode.new(markdown, node_meta).to_array
     choices = raw.map do |choice|
       choice["front"] = render_markdown(choice["front"])
-      choice["back"] = render_markdown(choice["back"])
+      choice["back"] = render_markdown(choice["back"]) if choice["back"]
       choice
     end
     node_meta["data"] = choices

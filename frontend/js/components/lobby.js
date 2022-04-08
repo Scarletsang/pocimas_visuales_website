@@ -1,5 +1,6 @@
 import { LitElement, css, html  } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
+import { when } from 'lit/directives/when.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { repeat } from "./helpers";
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
@@ -80,6 +81,8 @@ export default class Lobby extends LitElement {
         text-align: left;
       }
 
+      .no-flip {cursor: default}
+
       .back {
         transform: rotateY(180deg);
       }
@@ -95,28 +98,50 @@ export default class Lobby extends LitElement {
     `
   ]
 
+  frontAndBack(choice) {
+    return html`
+      <div class="front">${unsafeHTML(choice.front)}</div>
+      <div class="back">
+        ${unsafeHTML(choice.back)}
+        ${this.renderNextLessonBtn(choice.id)}
+      </div>
+      `;
+  }
+  
+  onlyFront(choice) {
+    return html`
+      <div class="front no-flip">
+        ${unsafeHTML(choice.front)}
+        ${this.renderNextLessonBtn(choice.id)}
+      </div>
+    `;
+  }
+
+  renderNextLessonBtn(id) {
+    return html`
+      <button class="next-lesson-btn" type="button" @click=${this.nextLessonBtn(id)}>
+        <h1>${this.nextLessonBtnText}</h1>
+      </button>
+    `;
+  }
+
   render() {
     return repeat(this.choiceContent, (choice) => {
       return html`
         <div class="card">
-          <div class=${classMap({flip: choice.id == this.focusId, wrapper: true})} @click=${this.focusCard(choice.id)}>
-            <div class="front">${unsafeHTML(choice.front)}</div>
-            <div class="back">
-              ${unsafeHTML(choice.back)}
-              <button class="next-lesson-btn" type="button" @click=${this.nextLessonBtn(choice.id)}>
-                <h1>${this.nextLessonBtnText}</h1>
-              </button>
-            </div>
+          <div class=${classMap({flip: choice.id == this.focusId, wrapper: true})} @click=${this.focusCard(choice)}>
+            ${when(choice.back, () => this.frontAndBack(choice), () => this.onlyFront(choice))}
           </div>
         </div>
       `
     });
   }
 
-  focusCard(id) {
+  focusCard(choice) {
+    if (!choice.back) return ;
     return function(event) {
       if (event.eventPhase == 3) {
-        this.focusId = id;
+        this.focusId = choice.id;
         event.stopPropagation();
       }
     }
