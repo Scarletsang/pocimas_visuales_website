@@ -13,12 +13,14 @@ export default class NodePointer {
 
   get attr() {return this.nodeInquiry.get(this._id);}
 
-  get scope() {return this.nodeWalker.chooseScope(this._id);}
+  get scopeId() {return this.nodeWalker.chooseScope(this._id);}
+
+  get scopeName() {return this.nodeWalker.nodeScopes.getScope(this.scopeId)[mappings.get("scopeFields").name];}
   
   get walked() {return this.nodeIdsToNodes(this.nodeWalker.walked);}
 
   get walkedInScope() {
-    let result = this.nodeWalker.walkedPathInScope(this.scope, this._id);
+    let result = this.nodeWalker.walkedPathInScope(this.scopeId, this._id);
     return this.nodeIdsToNodes(result);
   }
 

@@ -21,7 +21,8 @@ export function initStore() {
   });
   mappings.set("scopeFields", {
     head: "head",
-    members: "members"
+    members: "members",
+    name: "name"
   });
   mappings.set("dataJSONFields", {
     nodes: "nodes",

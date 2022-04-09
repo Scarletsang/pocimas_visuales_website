@@ -2,6 +2,7 @@ import { LitElement, css, html } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { removeItemFromArray } from '../helpers';
 import { global, mappings } from "../store";
+import { defaultFonts } from './styles';
 import ComponentController from './componentController';
 
 export default class LessonList extends LitElement {
@@ -9,36 +10,43 @@ export default class LessonList extends LitElement {
   controller = new LessonListController(this);
 
   static properties = {
-    structure: {reflect: true},
-    usePrefix: {type: Boolean, state: true},
-    isInScope:   {type: Boolean, state: true},
-    lessons:   {type: Object, state: true},
+    structure:     {reflect: true},
+    usePrefix:     {type: Boolean, state: true},
+    isInScope:     {type: Boolean, state: true},
+    scopeName:     {state: true},
+    lessons:       {type: Object, state: true},
     currentNodeId: {state: true}
   }
 
-  static styles = css`
-    a {
-      display: block;
-      margin: 0.5rem 0;
-      color: var(--light-theme-color);
-      text-decoration: none;
-    }
+  static styles = [
+    defaultFonts,
+    css`
+      a {
+        display: block;
+        margin: 0.5rem 0;
+        color: var(--light-theme-color);
+        text-decoration: none;
+      }
 
-    a.highlight {color: var(--theme-color);}
+      a.highlight {color: var(--theme-color);}
 
-    :host {
-      padding: 0;
-    }
+      :host {
+        padding: 0;
+      }
 
-    :host([structure=home]) a {
-      color: var(--theme-color);
-      margin-bottom: 1.5rem;
-    }
+      :host([structure=home]) a {
+        color: var(--theme-color);
+        margin-bottom: 1.5rem;
+      }
 
-    :host([structure=home]) a:hover {
-      color: var(--highlight-color);
-    }
-  `
+      :host([structure=home]) a:hover {
+        color: var(--highlight-color);
+      }
+
+      .indented {
+        padding-left: 3rem;
+      }`
+  ]
 
   renderItem(lesson, index) {
     if (this.usePrefix) {
@@ -48,13 +56,12 @@ export default class LessonList extends LitElement {
   }
 
   scopedPage() {
-    let [head, ...rest] = this.lessons;
-    let list = rest.map((lesson) => {
-      let highlight = {highlight: lesson.id == this.currentNodeId};
-      return html`<a href="#${lesson.id}" class=${classMap(highlight)}>&nbsp;&nbsp;${lesson.title}</a>`
+    let list = this.lessons?.map((lesson) => {
+      let highlight = {highlight: lesson.id == this.currentNodeId, indented: true};
+      return html`<a href="#${lesson.id}" class=${classMap(highlight)}>${lesson.title}</a>`
     })
     return html`
-      <a href="#${head.id}" class="highlight">${head.title}</a>
+      <h1 class="highlight">${this.scopeName}</h1>
       ${list}
     `;
   }
@@ -81,6 +88,7 @@ class LessonListController extends ComponentController {
     if (!this.host.isInScope) {this.normalRendering(); return;}
     let nodeArray = this.nodePointer.walkedInScope;
     if (!nodeArray) {this.normalRendering(); return;}
+    this.host.scopeName = this.nodePointer.scopeName;
     this.host.lessons = nodeArray;
     this.host.usePrefix = false;
   }
@@ -104,7 +112,7 @@ class LessonListController extends ComponentController {
   }
 
   contentPage() {
-    this.host.lessons =  this.nodePointer.walked.slice(1);
-    this.host.usePrefix = true;
+    this.host.lessons =  this.nodePointer.walked.slice(2);
+    this.host.usePrefix = false;
   }
 }
