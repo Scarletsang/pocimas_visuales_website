@@ -88,7 +88,7 @@ export default class Page extends LitElement {
 
     /* structure: cinema */
     
-    :host([structure=cinema]) navigation-bar {
+    /* :host([structure=cinema]) navigation-bar {
       top: 0;
       left: 0;
       transform: translate(0, 0);
@@ -105,7 +105,7 @@ export default class Page extends LitElement {
       top: 0;
       width: 100%;
       box-sizing: border-box;
-    }
+    } */
   `
 
   homePage() {
@@ -140,6 +140,10 @@ export default class Page extends LitElement {
         <resource-content class="content" ></resource-content>
       </div>
     `
+  }
+
+  cinemaPage() {
+    
   }
 
   renderNavigationBar() {

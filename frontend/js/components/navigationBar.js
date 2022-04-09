@@ -43,10 +43,6 @@ export default class NavigationBar extends LitElement {
       background: url("/img/logo_01.svg") no-repeat;
       transition: all 200ms ease-in-out;
     }
-    
-    :host([structure=cinema]) #website-icon-image {
-      width: 6rem;
-    }
 
     #website-icon-image:hover, #website-icon-image:active {
       background: url("/img/logo_02.svg") no-repeat;
@@ -99,12 +95,6 @@ export default class NavigationBar extends LitElement {
     `
   }
 
-  cinemaPage() {
-    return html`
-      <div @click="${this.iconBtn}" id="website-icon-image"></div>
-    `
-  }
-
   contentPage() {
     return html`
       <div @click="${this.iconBtn}" id="website-icon-image"></div>
@@ -116,8 +106,6 @@ export default class NavigationBar extends LitElement {
     switch (this.structure) {
       case "home":
         return this.homePage();
-      case "cinema":
-        return this.cinemaPage();
       default:
         return this.contentPage();
     }

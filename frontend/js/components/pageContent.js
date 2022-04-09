@@ -11,7 +11,8 @@ export default class PageContent extends LitElement {
     nextLessonBtnText: {state: true},
     nextId:            {state: true},
     isEndNode:         {type: Boolean, state: true},
-    content:           {type: DocumentFragment, state: true}
+    content:           {state: true},
+    data:              {type: Object, state: true}
   }
 
   static styles = [
@@ -59,14 +60,37 @@ export default class PageContent extends LitElement {
 
     /* structure: cinema */
 
-    :host([structure=cinema]) {
+    .single-content {
+      height: 100%;
+      width: 100%;
+      border: none;
+      box-sizing: border-box;
+      padding: 2rem;
+      object-fit: cover;
+      overflow-x: hidden;
+    }
+
+    [iframe-embed] {
+      box-sizing: content-box;
+      padding: 0;
+      border: var(--focus-border);
+      margin: 0 2rem;
+      width: calc(100% - 4rem);
+      height: calc(100% - 2rem);
+    }
+
+    :host([structure=cinema]) #next-lesson-btn {
+      bottom: calc( -0.5 * var(--border-width));
+    }
+
+    /* :host([structure=cinema]) {
       padding: var(--border-width);
     }
     
     :host([structure=cinema]) .lesson-content {
       padding: 0;
       border: none;
-    }
+    } */
   `]
 
   renderNextLessonBtn() {
@@ -78,11 +102,68 @@ export default class PageContent extends LitElement {
     `
   }
 
-  render() {
+  contentPage() {
     return html`
       <section class="lesson-content">${unsafeHTML(this.content)}</section>
       ${this.renderNextLessonBtn()}
+      `;
+  }
+
+  cinemaPage() {
+    switch (this.data?.type) {
+      case "iframe":
+        return this.iframe();
+      case "vimeo":
+        return this.vimeo();
+      case "image":
+        return this.image();
+      default:
+        return this.contentPage();
+    }
+  }
+  
+  iframe() {
+    return html`
+      <iframe iframe-embed
+        class="single-content"
+        title=${this.data.title}
+        src=${this.data.url}
+        frameBorder="0">
+      </iframe>
+      ${this.renderNextLessonBtn()}
+      `;
+  }
+
+  vimeo() {
+    return html`
+      <iframe
+        class="single-content"
+        src="https://player.vimeo.com/video/${this.data.id}?h=f6ac9fdd61&color=5BA7AE&byline=0&portrait=0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+        frameBorder="0">
+      </iframe>
+      ${this.renderNextLessonBtn()}
+      `;
+  }
+  
+  image() {
+    return html`
+      <img 
+        class="single-content"
+        alt=${this.data.title} 
+        src=${this.data.url}>
+      ${this.renderNextLessonBtn()}
     `
+  }
+
+  render() {
+    switch (this.structure) {
+      case "cinema":
+        return this.cinemaPage();
+      default:
+        return this.contentPage();
+    }
   }
 
   nextLessonBtn() {
@@ -96,8 +177,9 @@ class PageContentController extends ComponentController {
     this.host.isEndNode = this.nodePointer.attr.isEndNode;
     let nextLessonBtnText = this.nodePointer.attr.nextLessonBtnText;
     this.host.nextLessonBtnText = nextLessonBtnText ? nextLessonBtnText : "";
-    let content = this.nodePointer.attr.content;
     this.host.nextId  = this.nodePointer.attr.nextIds?.[0];
+    let content = this.nodePointer.attr.content;
     this.host.content = content ? content : "";
+    this.host.data = this.nodePointer.attr.data;
   }
 }
