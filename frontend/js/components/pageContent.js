@@ -67,7 +67,6 @@ export default class PageContent extends LitElement {
       border: none;
       box-sizing: border-box;
       padding: 2rem;
-      object-fit: cover;
       overflow-x: hidden;
     }
 
