@@ -92,6 +92,7 @@ export default class Lobby extends LitElement {
         position: absolute;
         border: none;
         background-color: transparent;
+        color: var(--theme-color);
         left: 0;
         bottom: var(--border-width);
         width: 100%;
