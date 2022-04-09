@@ -20,7 +20,7 @@
 :root {
   background-color: white;
   color: var(--theme-color);
-  font-size: 16px;
+  font-size: 12px;
   margin: 0;
   overflow: hidden;
 }
@@ -115,6 +115,25 @@ iframe[website-embed] {
   height: 100%;
 }
 
-@media screen and (orientation:portrait) {
-  
+/* @media screen and (min-width: 576px) {
+  :root {
+  }
 }
+
+@media screen and (min-width: 768px) {
+  :root {
+  }
+} */
+
+@media screen and (min-width: 992px) {
+  :root {
+    font-size: 13px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
