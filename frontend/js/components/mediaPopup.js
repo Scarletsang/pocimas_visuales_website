@@ -29,6 +29,10 @@ export default class MediaPopup extends LitElement {
         box-sizing: border-box;
       }
 
+      [pdf] {
+        border: 1px solid rgba(144, 94, 94, 0.06);
+      }
+
       [description] {
         text-align: center;
         margin-top: 0;
