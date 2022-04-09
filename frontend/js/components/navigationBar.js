@@ -16,6 +16,15 @@ export default class NavigationBar extends LitElement {
 
   static styles = css`
     :host {
+      top: 50%;
+      left: var(--border-width);
+      width: var(--nav-width);
+      height: 35rem;
+      transform: translate(0%, -50%);
+      position: absolute;
+      overflow: hidden;
+      transition: left ease-in-out 1s, transform ease-in-out 1s;
+      -webkit-transition: left ease-in-out 1s, transform ease-in-out 1s, top ease-in-out 1s;
       border: none;
       padding: 1.5ex 0;
       display: flex;
@@ -26,6 +35,12 @@ export default class NavigationBar extends LitElement {
 
     :host([structure=home]) {
       padding: 1.5ex 3rem;
+    }
+
+    :host([structure=hide]) {
+      top: 0;
+      left: 0;
+      transform: none;
     }
 
     :host * {
@@ -99,13 +114,19 @@ export default class NavigationBar extends LitElement {
     return html`
       <div @click="${this.iconBtn}" id="website-icon-image"></div>
       <lesson-list structure="${this.structure}"></lesson-list>
-    `
+      `
+  }
+  
+  hideNav() {
+    return html`<div @click="${this.iconBtn}" id="website-icon-image"></div>`;
   }
 
   render() {
     switch (this.structure) {
       case "home":
         return this.homePage();
+      case "hide":
+        return this.hideNav();
       default:
         return this.contentPage();
     }

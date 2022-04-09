@@ -13,16 +13,6 @@ export default class Page extends LitElement {
   static styles = css`
     /* default structure: content */
     navigation-bar {
-      top: 50%;
-      left: var(--border-width);
-      width: var(--nav-width);
-      height: 35rem;
-      transform: translate(0%, -50%);
-      position: absolute;
-      overflow: hidden;
-      box-sizing: border-box;
-      transition: left ease-in-out 1s, transform ease-in-out 1s;
-      -webkit-transition: left ease-in-out 1s, transform ease-in-out 1s, top ease-in-out 1s;
       z-index: 2;
     }
 
@@ -86,6 +76,17 @@ export default class Page extends LitElement {
       padding-right: 0;
     }
 
+    /* navStructure: hide */
+
+    navigation-bar[structure=hide] + #page-content-wrapper {
+      left: 0;
+      width: 100%;
+    }
+  
+    navigation-bar[structure=hide] + #page-content-wrapper .content {
+      left: var(--border-width);
+    }
+    
     /* structure: cinema */
     
     /* :host([structure=cinema]) navigation-bar {
