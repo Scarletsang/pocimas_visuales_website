@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Scarletsang/pocimas_visuales_website#readme",
   "dependencies": {
+    "@vimeo/player": "^2.16.4",
     "g": "^2.0.1",
     "lit": "^2.2.1"
   },

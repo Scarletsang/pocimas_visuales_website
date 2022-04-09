@@ -1,6 +1,7 @@
 import { LitElement, css, html } from "lit";
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
+import { pauseVimeoPlayer } from "./helpers";
 import ComponentController from "./componentController";
 
 export default class PageContent extends LitElement {
@@ -38,7 +39,7 @@ export default class PageContent extends LitElement {
       overflow-x: hidden;
     }
 
-    .lesson-content .video {
+    .lesson-content [vimeo] {
       overflow: hidden;
       width: 100%;
       height: calc(100vh - 2 * (var(--border-width) + 2rem));
@@ -137,7 +138,7 @@ export default class PageContent extends LitElement {
 
   vimeo() {
     return html`
-      <iframe
+      <iframe vimeo
         class="single-content"
         src="https://player.vimeo.com/video/${this.data.id}?h=f6ac9fdd61&color=5BA7AE&byline=0&portrait=0"
         allow="autoplay; fullscreen; picture-in-picture"
@@ -168,6 +169,8 @@ export default class PageContent extends LitElement {
   }
 
   nextLessonBtn() {
+    let vimeoIframe = this.renderRoot.querySelector("iframe[vimeo]");
+    if (vimeoIframe) pauseVimeoPlayer(vimeoIframe);
     let nextId = this.nextId;
     window.location.hash = `#${nextId}`;
   }

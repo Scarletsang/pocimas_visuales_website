@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "lit";
+import { pauseVimeoPlayer } from "./helpers";
 import { defaultButton } from "./styles";
 
 export default class MediaPopup extends LitElement {
@@ -87,6 +88,8 @@ export default class MediaPopup extends LitElement {
   }
 
   closePopupBtn() {
+    let vimeoIframe = this.renderRoot.querySelector("iframe[vimeo]");
+    if (vimeoIframe) pauseVimeoPlayer(vimeoIframe);
     this.classList.add("hide");
   }
 }

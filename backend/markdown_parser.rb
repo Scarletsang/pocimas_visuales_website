@@ -64,7 +64,7 @@ class Kramdown::Parser::CustomKramdown < Kramdown::Parser::Kramdown
     @src.pos += @src.matched_size
     iframe_attr = {
       src: "https://player.vimeo.com/video/#{@src.captures[0]}?h=f6ac9fdd61&color=5BA7AE&byline=0&portrait=0",
-      class: "video",
+      vimeo: "",
       frameborder: "0",
       allow: "autoplay; fullscreen; picture-in-picture",
       allowfullscreen: ""
