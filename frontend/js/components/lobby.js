@@ -65,8 +65,6 @@ export default class Lobby extends LitElement {
         width: 100%;
         height: 100%;
         padding: 2rem;
-        background-color: white;
-        color: var(--theme-color);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         box-sizing: border-box;
@@ -75,6 +73,8 @@ export default class Lobby extends LitElement {
       .front {
         cursor: pointer;
         text-align: center;
+        background-color: white;
+        color: var(--theme-color);
       }
 
       .front li {
@@ -85,6 +85,8 @@ export default class Lobby extends LitElement {
 
       .back {
         transform: rotateY(180deg);
+        background-color: var(--theme-color);
+        color: white;
       }
 
       .next-lesson-btn {
