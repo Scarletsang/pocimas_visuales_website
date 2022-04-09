@@ -87,9 +87,11 @@ export default class ResourceContent extends LitElement {
 
   popupResource(resource) {
     return function() {
+      let src = resource.data;
+      if (resource.type == "vimeo") src = resource.id;
       setAttributes(this.popupElement, {
         type: resource.type,
-        src: resource.data,
+        src: src,
         description: resource.title
       });
       this.popupElement.classList.remove("hide");
