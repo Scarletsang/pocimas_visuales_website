@@ -79,7 +79,7 @@ export default class PageContent extends LitElement {
       height: calc(100% - 2rem);
     }
 
-    :host([structure=cinema]) #next-lesson-btn {
+    .single-content + #next-lesson-btn {
       bottom: calc( -0.5 * var(--border-width));
     }
 
@@ -128,6 +128,7 @@ export default class PageContent extends LitElement {
         class="single-content"
         title=${this.data.title}
         src=${this.data.url}
+        allow=${this.data.iframeAllow}
         frameBorder="0">
       </iframe>
       ${this.renderNextLessonBtn()}
