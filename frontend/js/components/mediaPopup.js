@@ -26,13 +26,7 @@ export default class MediaPopup extends LitElement {
         width: 100%;
         padding: 3rem calc(3rem + var(--border-width)) 0 calc(3rem + var(--border-width));
         height: calc(100% - 6rem);
-        object-fit: contain;
         box-sizing: border-box;
-      }
-
-      [pdf] {
-        height: 100vh;
-        padding-bottom: 3rem;
       }
 
       [description] {
