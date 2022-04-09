@@ -3,7 +3,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { repeat } from "./helpers";
-import { defaultButton, defaultFonts, defaultMedia } from "./styles";
+import { defaultFonts, defaultMedia } from "./styles";
 import ComponentController from "./componentController";
 
 export default class Lobby extends LitElement {
@@ -17,7 +17,6 @@ export default class Lobby extends LitElement {
   }
 
   static styles = [
-    defaultButton,
     defaultFonts,
     defaultMedia,
     css`
@@ -91,9 +90,20 @@ export default class Lobby extends LitElement {
 
       .next-lesson-btn {
         position: absolute;
+        border: none;
+        background-color: transparent;
         left: 0;
         bottom: var(--border-width);
         width: 100%;
+        cursor: pointer;
+      }
+
+      .back .next-lesson-btn {
+        color: white;
+      }
+
+      .next-lesson-btn:hover {
+        color: var(--highlight-color);
       }
 
       img {max-height: 50%;}
