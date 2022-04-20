@@ -106,7 +106,7 @@ class LessonListController extends ComponentController {
   
   homePage() {
     let homeNode = global.get("nodeInquiry").get(mappings.get("entryNodeId"));
-    let lessonIds = removeItemFromArray(homeNode.nextIds, homeNode.startId);
+    let lessonIds = removeItemFromArray(homeNode.nextIds, homeNode.data.startId);
 		this.host.lessons = this.nodePointer.nodeIdsToNodes(lessonIds);
 		this.host.usePrefix = false;
   }

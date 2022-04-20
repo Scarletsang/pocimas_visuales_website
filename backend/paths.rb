@@ -7,7 +7,8 @@ module Paths
   DOCUMENTATION_FOLDER = "docs/"
   MARKDOWN_FOLDER = "#{UPLOAD_FOLDER}markdown/"
 
-  NODES_CONNECTION_YAML = "#{UPLOAD_FOLDER}nodes.yaml"
-  SCOPE_YAML            = "#{UPLOAD_FOLDER}scope.yaml"
-  WEBSITE_META_YAML     = "#{UPLOAD_FOLDER}website.yaml"
+  NODES_YAML        = "#{UPLOAD_FOLDER}nodes.yaml"
+  SCOPE_YAML        = "#{UPLOAD_FOLDER}scope.yaml"
+  MEDIA_YAML        = "#{UPLOAD_FOLDER}media.yaml"
+  WEBSITE_META_YAML = "#{UPLOAD_FOLDER}website.yaml"
 end

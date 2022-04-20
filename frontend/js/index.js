@@ -2,6 +2,7 @@ import defineCustomElements from "./components";
 import NodeInquiry from "./models/nodeInquiry";
 import NodeData from "./models/nodeData";
 import NodeScopes from "./models/nodeScopes";
+import MediaData from "./models/mediaData";
 import { global, mappings, initStore } from "./store";
 import NodePointer from "./nodePointer";
 
@@ -26,10 +27,12 @@ function main() {
 function importDataToStore(jsonObj) {
   let nodeDataObj   = jsonObj[mappings.get("dataJSONFields").nodes];
   let nodeScopesObj = jsonObj[mappings.get("dataJSONFields").scope];
+  let mediaDataObj  = jsonObj[mappings.get("dataJSONFields").media];
   let nodeData      = new NodeData(nodeDataObj);
   let nodeScopes    = new NodeScopes(nodeScopesObj);
+  let mediaData     = new MediaData(mediaDataObj);
   global.set("nodeScopes", nodeScopes);
-  global.set("nodeInquiry", new NodeInquiry(nodeData, nodeScopes));
+  global.set("nodeInquiry", new NodeInquiry(nodeData, mediaData, nodeScopes));
 }
 
 function nodesContext(func) {

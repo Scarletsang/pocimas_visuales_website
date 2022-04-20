@@ -1,19 +1,20 @@
-import { mappings } from "../store";
+import NodeData from "./nodeData";
 
 /** @typedef {String} NodeId  ID of a node */
 /** @typedef {String} ScopeId ID of a scope */
 
 export default class NodeInquiry {
-  constructor(nodeData, nodeScopes) {
-    this.nodes = new Map();
-    this.nodeData = nodeData;
+  constructor(nodeData, mediaData, nodeScopes) {
+    this.nodes      = new Map();
+    this.nodeData   = nodeData;
+    this.mediaData  = mediaData;
     this.nodeScopes = nodeScopes;
   }
 
   get(nodeId) {
     if (!this.nodeData.hasNode(nodeId)) return false;
     if (this.nodes.has(nodeId)) return this.nodes.get(nodeId);
-    let node = new Node(nodeId, this.nodeData, this.nodeScopes);
+    let node = new Node(nodeId, this.nodeData, this.mediaData, this.nodeScopes);
     this.nodes.set(nodeId, node);
     return node;
   }
@@ -21,19 +22,24 @@ export default class NodeInquiry {
 }
 
 class Node {
-  constructor(id, nodeData, nodeScopes) {
-    /** @property {NodeId} _id */
-    this._id = id;
-    this.nodeData = nodeData;
+  constructor(id, nodeData, mediaData, nodeScopes) {
+    this._id        = id;
+    this.nodeData   = nodeData;
+    this.mediaData  = mediaData;
     this.nodeScopes = nodeScopes;
-    this.accessed = new Map();
+    this.accessed   = new Map();
     return new Proxy(this, {get: this._proxyHandler, set: () => {}});
   }
 
   _proxyHandler(target, prop, receiver) {
     // allow accessing the data with the mapped value
-    let fieldName = mappings.get("nodeFields")[prop];
-    if (fieldName) return target.nodeData.getNodeAttribute(target._id, fieldName);
+    let fieldName = NodeData.JSONFields[prop];
+    if (fieldName) {
+      let propValue = target.nodeData.getNodeAttribute(target._id, fieldName);
+      if (prop != "data") return propValue;
+      let mediaData = target.mediaData.get(propValue);
+      return mediaData? mediaData : propValue;
+    }
     // memorize accessed function
     if (target.accessed.has(prop)) return target.accessed.get(prop);
     let result = Reflect.get(...arguments);

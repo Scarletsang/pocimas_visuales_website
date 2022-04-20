@@ -7,7 +7,7 @@ class PreCompiling
   include Paths
   def initialize env
     Renderer.compile_website_to(PUBLIC_FOLDER, WEBSITE_META_YAML)
-    Renderer.compile_data_json_to(DATA_FOLDER, NODES_CONNECTION_YAML, SCOPE_YAML)
+    Renderer.compile_data_json_to(DATA_FOLDER, NODES_YAML, SCOPE_YAML, MEDIA_YAML)
     case env
     when "production"
       system("rm -rf dist/")

@@ -143,10 +143,6 @@ export default class Page extends LitElement {
     `
   }
 
-  cinemaPage() {
-    
-  }
-
   renderNavigationBar() {
     let navStructure = this.navStructure ? this.navStructure : this.structure;
     return html`
@@ -184,8 +180,7 @@ class PageController extends ComponentController {
     this.host.structure = this.nodePointer.attr.structure;
     this.host.navStructure = this.nodePointer.attr.navStructure;
     if (this.host.structure == "home") {
-      console.log(this.nodePointer.attr);
-      this.host.coverImage = this.nodePointer.attr.coverImage;
+      this.host.coverImage = this.nodePointer.attr.data.coverImage;
     }
   }
 }
