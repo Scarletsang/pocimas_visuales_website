@@ -1,15 +1,18 @@
-import { mappings } from "../store";
-import { constructSetMap } from "../helpers";
+import { constructMemberSetsMap } from "../helpers";
 
 export default class NodeScopes {
   constructor(jsonObj) {
     const scopes = Object.entries(jsonObj);
     this._searchById     = new Map(scopes);
-    this._searchByHead   = new Map();
-    this._searchByNodeId = new Map();
-    this._constructSearchByhead(scopes);
-    this._constructSearchByNodeId(scopes);
+    this._searchByHead   = this._constructSearchByhead(scopes);
+    this._searchByNodeId = this._constructSearchByNodeId(scopes);
   }
+
+  static JSONFields = {
+    head: "head",
+    members: "members",
+    name: "name"
+  };
 
   getScope(scopeId) { return this._searchById.get(scopeId); }
 
@@ -24,18 +27,18 @@ export default class NodeScopes {
   getScopesByHeadId(nodeId) {return this._searchByHead.get(nodeId); }
 
   _constructSearchByhead(scopes) {
-    const headField = mappings.get("scopeFields").head;
+    const headField = this.constructor.JSONFields.head;
     const extractFunction = (scopeObj) => {
       return [scopeObj[headField]];
     }
-    constructSetMap(scopes, this._searchByHead, extractFunction);
+    return constructMemberSetsMap(scopes, extractFunction);
   }
 
   _constructSearchByNodeId(scopes) {
-    const membersField = mappings.get("scopeFields").members;
+    const membersField = this.constructor.JSONFields.members;
     const extractFunction = (scopeObj) => {
       return scopeObj[membersField];
     };
-    constructSetMap(scopes, this._searchByNodeId, extractFunction);
+    return constructMemberSetsMap(scopes, extractFunction);
   }
 }

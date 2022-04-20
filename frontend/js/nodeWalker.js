@@ -1,14 +1,11 @@
 import { mappings } from "./store";
 import { firstItemInSet, firstIntersectItem, subArrayByItemValues } from "./helpers";
+import NodeInquiry from "./models/nodeInquiry";
+import NodeScopes from "./models/nodeScopes";
 
-/** @typedef {String} NodeId  ID of a node */
-/** @typedef {String} ScopeId ID of a scope */
-/** 
- * @typedef {Object} ScopeObject A object that describes a scope.
- * @property {NodeId}        head    the starting node of the scope.
- * @property {Array<NodeId>} members all the members in the scope.
- * @property {String}        name    the name/id of the scope.
- */
+/** @typedef {import('./types').NodeId} NodeId */
+/** @typedef {import('./types').ScopeId} ScopeId */
+/** @typedef {import('./types').ScopeData} ScopeData see documentation in types.d.ts */
 
 /**
  * A singleton class responsible for making calculations that involves traversing the nodes in a directed graph, where each node represents one page of the website.
@@ -161,7 +158,7 @@ export default class NodeWalker {
   /**
    * Determines the scope that the given node is in. (A node might be a member of multiple scopes) This method make the decision based on the traversed path ({@link NodeWalker.walked}). Returns false if the node is not a member of any scopes.
    * @param {NodeId} nodeId 
-   * @returns {ScopeObject | false}
+   * @returns {ScopeData | false} {@link ScopeData}
    */
   chooseScope(nodeId) {
     let scopes = this.nodeInquiry.get(nodeId)?.scopes;

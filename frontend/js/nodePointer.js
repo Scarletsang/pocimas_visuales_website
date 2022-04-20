@@ -6,7 +6,7 @@ export default class NodePointer {
   constructor() {
     this.nodeInquiry = global.get("nodeInquiry");
     this.componentRenderer = global.get("componentRenderer");
-    this.nodeWalker = new NodeWalker(mappings.get("entryNodeId"));
+    this.nodeWalker = new NodeWalker(mappings.get("entryNodeId"), this.nodeInquiry, global.get("nodeScopes"));
   }
 
   get id() {return this._id;}

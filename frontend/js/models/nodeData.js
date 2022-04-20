@@ -1,12 +1,30 @@
-import { mappings } from "../store";
-import { constructSetMap } from "../helpers";
+import { constructMemberSetsMap } from "../helpers";
 
+/** @typedef {String} NodeId  ID of a node */
+
+/**
+ * An interface to get the data of every node (a.k.a. every page of the website).
+ */
 export default class NodeData {
+  /**
+   * 
+   * @param {{[nodeId: String]: RawNodeData}} jsonObj 
+   */
   constructor(jsonObj) {
     const nodes = Object.entries(jsonObj);
     this._nodes = new Map(nodes);
-    this._choiceNodes = new Map();
-    this._constructChoiceNodes(nodes);
+    this._choiceNodes = this._constructChoiceNodes(nodes);
+  }
+
+  static JSONFields = {
+    id: "id",
+    structure: "structure",
+    navStructure: "nav",
+    title: "title",
+    nextLessonBtnText: "nextLessonBtnText",
+    nextIds: "nextIds",
+    content: "html",
+    data: "data"
   }
 
   hasNode(nodeId) { return this._nodes.has(nodeId); }
@@ -26,7 +44,7 @@ export default class NodeData {
   
   isEndNode(node) {
     let nodeObj = typeof node === "string" ? this.getNode(node) : node;
-    if (nodeObj) return !nodeObj.hasOwnProperty(mappings.get("nodeFields").nextIds);
+    if (nodeObj) return !nodeObj.hasOwnProperty(this.constructor.JSONFields.nextIds);
     return nodeObj;
   }
   
@@ -35,7 +53,7 @@ export default class NodeData {
   }
 
   nextIdsOf(node) {
-    return this.getNodeAttribute(node, mappings.get("nodeFields").nextIds);
+    return this.getNodeAttribute(node, this.constructor.JSONFields.nextIds);
   }
 
   nextNodesOf(node) {
@@ -44,13 +62,13 @@ export default class NodeData {
   }
 
   _constructChoiceNodes(nodes) {
-    const nextIdsField = mappings.get("nodeFields").nextIds;
+    const nextIdsField = this.constructor.JSONFields.nextIds;
     const extractFunction = (nodeObj) => {
       if (!nodeObj.hasOwnProperty(nextIdsField)) return [];
       let nextids = nodeObj[nextIdsField];
       if (nextids.length <= 1) return [];
       return nextids;
     }
-    constructSetMap(nodes, this._choiceNodes, extractFunction);
+    return constructMemberSetsMap(nodes, extractFunction);
   }
 }

@@ -1,9 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { when } from 'lit/directives/when.js';
 import { classMap } from 'lit/directives/class-map.js'
-import { repeat } from "./helpers";
+import { repeat, setAttributes } from "./helpers";
 import { defaultButton, defaultFonts, defaultMedia } from "./styles";
-import { setAttributes } from "../helpers";
 import ComponentController from "./componentController";
 
 export default class ResourceContent extends LitElement {
@@ -87,7 +86,7 @@ export default class ResourceContent extends LitElement {
 
   popupResource(resource) {
     return function() {
-      let src = resource.data;
+      let src = resource.url;
       if (resource.type == "vimeo") src = resource.id;
       setAttributes(this.popupElement, {
         type: resource.type,
