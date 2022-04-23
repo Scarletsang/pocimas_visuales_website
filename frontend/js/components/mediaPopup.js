@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "lit";
-import { pauseVimeoPlayer } from "./helpers";
+import { pauseVimeoPlayer } from "../utils/components";
 import { defaultButton } from "./styles";
 
 export default class MediaPopup extends LitElement {

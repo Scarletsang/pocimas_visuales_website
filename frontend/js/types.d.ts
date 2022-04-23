@@ -1,12 +1,10 @@
-import NodeWalker from "./nodeWalker"
-
-export type NodeId = String;
-export type ScopeId = String;
-export type HTMLContent = String;
+export type NodeId = string;
+export type ScopeId = string;
+export type HTMLContent = string;
 /** A union type of the following:
  * 1. a normal website URL
  * 2. a relative path that grabs media from the server */
-export type URL = String;
+export type URL = string;
 
 /**
  * The scope data in JSON format
@@ -15,7 +13,7 @@ export type URL = String;
  * @property **members** - all the members in the scope.
  */
 export type ScopeData = {
-  name: String,
+  name: string,
   head : NodeId,
   members: Array<NodeId>
 };
@@ -32,17 +30,17 @@ export type ScopeData = {
  */
 export type NodeRawData = {
   id: NodeId,
-  title: String,
+  title: string,
   structure: "home" | "info" | "cinema" | "resource" | "choice",
-  nav?: "home" | "hide" | String,
-  nextLessonBtnText?: String,
+  nav?: "home" | "hide" | string,
+  nextLessonBtnText?: string,
   nextIds?: Array<NodeId>,
   html?: HTMLContent,
   data?: HomePageData | ResourcePageData | ChoicePageData | CinemaPageData
 };
 
 type HomePageData = {
-  startText: String,
+  startText: string,
   startId: NodeId,
   coverImage: URL
 };
@@ -61,20 +59,20 @@ type CinemaPageData = VimeoData | IframeData | StaticMediaData;
 
 interface VimeoData {
   type: "vimeo"
-  title: String
+  title: string
   id: Number
 };
 
 interface IframeData {
   type: "iframe"
-  title: String
+  title: string
   url: URL
   iframeAllow?: String
 };
 
 interface StaticMediaData {
   type: "image" | "pdf"
-  title: String
+  title: string
   url: URL
 };
 

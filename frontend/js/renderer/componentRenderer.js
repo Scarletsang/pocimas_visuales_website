@@ -1,3 +1,8 @@
+/** @module RendererModules.ComponentRenderer */
+
+/**
+ * An event dispatcher that is controlled by the {@link NodeWalker} singleton class. When dispatched, the web components that registered in this class will be notified and perform update by itself.
+ */
 export default class ComponentRenderer {
   constructor() {
     this._components = [];

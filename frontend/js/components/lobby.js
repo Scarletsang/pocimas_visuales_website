@@ -2,9 +2,9 @@ import { LitElement, css, html  } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { repeat } from "./helpers";
+import { repeat } from "../utils/components";
 import { defaultFonts, defaultMedia } from "./styles";
-import ComponentController from "./componentController";
+import ComponentController from "../renderer/componentController";
 
 export default class Lobby extends LitElement {
 

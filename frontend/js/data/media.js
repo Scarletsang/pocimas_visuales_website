@@ -1,3 +1,8 @@
+/** @module DataModules.MediaData */
+
+/**
+ * An interface to get the media data
+ */
 export default class MediaData {
   constructor(jsonObj) {
     const media = Object.entries(jsonObj);

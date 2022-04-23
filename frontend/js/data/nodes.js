@@ -1,6 +1,5 @@
-import { constructMemberSetsMap } from "../helpers";
-
-/** @typedef {String} NodeId  ID of a node */
+/** @module DataModules.NodeData */
+import { constructMemberSetsMap } from "../utils/general";
 
 /**
  * An interface to get the data of every node (a.k.a. every page of the website).
@@ -8,7 +7,7 @@ import { constructMemberSetsMap } from "../helpers";
 export default class NodeData {
   /**
    * 
-   * @param {{[nodeId: String]: RawNodeData}} jsonObj 
+   * @param {ServerTypes.NodeRawData} jsonObj 
    */
   constructor(jsonObj) {
     const nodes = Object.entries(jsonObj);

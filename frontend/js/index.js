@@ -1,10 +1,10 @@
 import defineCustomElements from "./components";
-import NodeInquiry from "./models/nodeInquiry";
-import NodeData from "./models/nodeData";
-import NodeScopes from "./models/nodeScopes";
-import MediaData from "./models/mediaData";
+import NodeInquiry from "./data/inquiry";
+import NodeData from "./data/nodes";
+import NodeScopes from "./data/scopes";
+import MediaData from "./data/media";
 import { global, mappings, initStore } from "./store";
-import NodePointer from "./nodePointer";
+import NodePointer from "./logic/nodePointer";
 
 function main() {
   initStore();

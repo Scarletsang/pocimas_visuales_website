@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "lit";
-import ComponentController from "./componentController";
+import ComponentController from "../renderer/componentController";
 
 export default class Page extends LitElement {
   controller = new PageController(this);

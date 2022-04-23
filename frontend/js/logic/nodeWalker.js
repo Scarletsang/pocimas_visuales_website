@@ -1,11 +1,6 @@
+/** @module LogicModules.NodeWalker */
 import { mappings } from "./store";
 import { firstItemInSet, firstIntersectItem, subArrayByItemValues } from "./helpers";
-import NodeInquiry from "./models/nodeInquiry";
-import NodeScopes from "./models/nodeScopes";
-
-/** @typedef {import('./types').NodeId} NodeId */
-/** @typedef {import('./types').ScopeId} ScopeId */
-/** @typedef {import('./types').ScopeData} ScopeData see documentation in types.d.ts */
 
 /**
  * A singleton class responsible for making calculations that involves traversing the nodes in a directed graph, where each node represents one page of the website.
@@ -20,42 +15,42 @@ import NodeScopes from "./models/nodeScopes";
 export default class NodeWalker {
   /**
    * Called by the nodePointer class.
-   * @param {NodeId} root 
+   * @param {BasicTypes.NodeId} root 
    */
   constructor(root, nodeInquiry, nodeScopes) {
-    /** @type {NodeInquiry} */
+    /** @type {DataModules.module:Inquiry.NodeInquiry} */
     this.nodeInquiry = nodeInquiry;
 
-    /** @type {NodeScopes} */
+    /** @type {DataModules.module:NodeScopes} */
     this.nodeScopes  = nodeScopes;
 
     /** 
      * The id of the root node that the nodeWalker starts to traverse from by default.
-     * @type {NodeId} 
+     * @type {BasicTypes.NodeId} 
      */
     this.root = root;
 
     /** 
      * An array of the walked path of the nodePointer. This is not a state by any means, but a means of memorization for storing the traversed path from the previous calculation.
-     * @type {Array<NodeId>} 
+     * @type {Array<BasicTypes.NodeId>} 
      * @public
      */
     this.walked = [root];
     
     /** 
      * An array of the choices (in order) that the user has made when they encountered a divergent node. When the NodeWalker encounters a divergent node during the traversal of nodes, the NodeWalker would depend on this variable to traverse (if possible) to the node that the user has chosen previously to walked on.
-     * @type {Array<NodeId>} 
+     * @type {Array<BasicTypes.NodeId>} 
      */
     this.chose = [];
   }
 
   /**
-   * When the user choose to go to a new node, the nodePointer class will call this function to calculate the new traversed path, and store the result in the {@link NodeWalker.walked} variable. Meanwhile {@link NodeWalker.chose} variable will also be updated based on the path. This is the only function in this class that is capable of updating the {@link NodeWalker.walked} and the{@link NodeWalker.chose} variables.
+   * When the user choose to go to a new node, the nodePointer class will call this function to calculate the new traversed path, and store the result in the {@link LogicModules.module:NodeWalker#walked walked property} variable. Meanwhile {@link LogicModules.module:NodeWalker#chose chose property} variable will also be updated based on the path. This is the only function in this class that is capable of updating the {@link LogicModules.module:NodeWalker#walked walked property} and the {@link LogicModules.module:NodeWalker#chose chose property} variables.
    * 
    * Returns false if any operations in the process has failed. Otherwise returns the current instance of the NodeWalker class.
    * 
-   * @param {NodeId} nodeId 
-   * @returns {NodeWalker | false}
+   * @param {BasicTypes.NodeId} nodeId 
+   * @returns {this | false}
    */
   teleport(nodeId) {
     let node = this.nodeInquiry.get(nodeId);
@@ -85,9 +80,9 @@ export default class NodeWalker {
   /**
    * Walk a step forward in the graph, then return the id of the node. If the current node diverges into multiple nodes, this function will step to the node with the ID specified in the `nextId` parameter. Return false if the `nextId` specified is invalid when the current node diverges. This method does not update any properties of this class.
    * 
-   * @param {NodeId} fromId 
-   * @param {NodeId | null} nextId 
-   * @returns {NodeId | false}
+   * @param {BasicTypes.NodeId} fromId 
+   * @param {BasicTypes.NodeId | null} nextId 
+   * @returns {BasicTypes.NodeId | false}
    */
   walk(fromId, nextId = null) {
     let node = this.nodeInquiry.get(fromId);
@@ -98,13 +93,20 @@ export default class NodeWalker {
   }
 
   /**
+   * An Object that can be used to update the {@link LogicModules.module:NodeWalker#walked walked property} and {@link LogicModules.module:NodeWalker#chose chose property} of this class. 
+   * @typedef {object} NodeWalkerStatesObject
+   * @property {Array<BasicTypes.NodeId>} walked
+   * @property {Array<BasicTypes.NodeId>} chose
+   */
+
+  /**
    * Calculate the path from a starting node to a destination node.
-   * @param {NodeId} fromId 
-   * @param {NodeId} destId 
-   * @param {Array<NodeId>} walked Accumulator
-   * @param {Array<NodeId>} chose Accumulator
+   * @param {BasicTypes.NodeId} fromId 
+   * @param {BasicTypes.NodeId} destId 
+   * @param {Array<BasicTypes.NodeId>} walked Accumulator
+   * @param {Array<BasicTypes.NodeId>} chose Accumulator
    * @param {Number} choseIndex Accumulator
-   * @returns {{walked: Array<NodeId>, chose: Array<NodeId>} | false}
+   * @returns {NodeWalkerStatesObject | false}
    */
   walkFromTo(fromId, destId, walked = [], chose = [], choseIndex = 0) {
     // Base case
@@ -145,9 +147,9 @@ export default class NodeWalker {
 
   /**
    * Returns the first group of consecutive nodes in the traversed path that are a member of the specified scope.
-   * @param {ScopeId} scopeId 
-   * @param {NodeId} nodeId 
-   * @returns {Array<NodeId> | false}
+   * @param {BasicTypes.ScopeId} scopeId 
+   * @param {BasicTypes.NodeId} nodeId 
+   * @returns {Array<BasicTypes.NodeId> | false}
    */
   walkedPathInScope(scopeId, nodeId) {
     let scopeHeadId = this.nodeScopes.getScope(scopeId)?.[mappings.get("scopeFields").head];
@@ -156,9 +158,9 @@ export default class NodeWalker {
   }
 
   /**
-   * Determines the scope that the given node is in. (A node might be a member of multiple scopes) This method make the decision based on the traversed path ({@link NodeWalker.walked}). Returns false if the node is not a member of any scopes.
-   * @param {NodeId} nodeId 
-   * @returns {ScopeData | false} {@link ScopeData}
+   * Determines the scope that the given node is in. (A node might be a member of multiple scopes) This method make the decision based on the traversed path (stored in the {@link LogicModules.module:NodeWalker#walked walked property}). Returns false if the node is not a member of any scopes.
+   * @param {BasicTypes.NodeId} nodeId 
+   * @returns {BasicTypes.ScopeId | false}
    */
   chooseScope(nodeId) {
     let scopes = this.nodeInquiry.get(nodeId)?.scopes;

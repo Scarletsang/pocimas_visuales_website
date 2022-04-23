@@ -1,9 +1,9 @@
 import { LitElement, css, html } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
-import { removeItemFromArray } from '../helpers';
+import { removeItemFromArray } from '../utils/general';
 import { global, mappings } from "../store";
 import { defaultFonts } from './styles';
-import ComponentController from './componentController';
+import ComponentController from '../renderer/componentController';
 
 export default class LessonList extends LitElement {
   

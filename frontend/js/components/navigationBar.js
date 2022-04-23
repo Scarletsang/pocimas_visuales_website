@@ -1,7 +1,8 @@
 import { LitElement, css, html} from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { animate } from '@lit-labs/motion';
 import { mappings } from "../store";
-import ComponentController from './componentController';
+import ComponentController from '../renderer/componentController';
 
 export default class NavigationBar extends LitElement {
 
@@ -112,13 +113,13 @@ export default class NavigationBar extends LitElement {
 
   contentPage() {
     return html`
-      <div @click="${this.iconBtn}" id="website-icon-image"></div>
+      ${this.renderIcon()}
       <lesson-list structure="${this.structure}"></lesson-list>
       `
   }
   
-  hideNav() {
-    return html`<div @click="${this.iconBtn}" id="website-icon-image"></div>`;
+  renderIcon() {
+    return html`<div @click="${this.iconBtn}" id="website-icon-image" ${animate()}></div>`;
   }
 
   render() {
@@ -126,7 +127,7 @@ export default class NavigationBar extends LitElement {
       case "home":
         return this.homePage();
       case "hide":
-        return this.hideNav();
+        return this.renderIcon();
       default:
         return this.contentPage();
     }
@@ -144,8 +145,8 @@ export default class NavigationBar extends LitElement {
 class NavigationBarController extends ComponentController {
   onHashChange() {
     if (this.host.structure === "home") {
-      this.host.startText = this.nodePointer.attr.startText;
-      this.host.startId   = this.nodePointer.attr.startId;
+      this.host.startText = this.nodePointer.attr.data.startText;
+      this.host.startId   = this.nodePointer.attr.data.startId;
       this.host.homeTitle = this.nodePointer.attr.content;
     }
   }

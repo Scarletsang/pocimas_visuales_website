@@ -1,4 +1,8 @@
 /**
+ * @module Helpers
+ */
+
+/**
  * generate a unique UUID using the web crypto object.
  * @returns {String}
  */

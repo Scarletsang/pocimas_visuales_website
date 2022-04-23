@@ -1,5 +1,9 @@
-import { constructMemberSetsMap } from "../helpers";
+/** @module DataModules.NodeScopes */
+import { constructMemberSetsMap } from "../utils/general";
 
+/**
+ * An interface to get useful information or properties of the scopes.
+ */
 export default class NodeScopes {
   constructor(jsonObj) {
     const scopes = Object.entries(jsonObj);
