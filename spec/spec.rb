@@ -1,5 +1,5 @@
-require_relative '../src/paths.rb'
-require_relative '../src/renderer.rb'
+require_relative '../backend/paths.rb'
+require_relative '../backend/renderer.rb'
 class Spec
   include Paths
 

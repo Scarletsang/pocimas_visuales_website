@@ -1,0 +1,17 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "cleverLinks": true
+  },
+  "opts": {
+    "destination": "./docs/"
+  },
+  "source": {
+    "includePattern": "\\.(jsx|js|ts|tsx)$"
+  }
+}

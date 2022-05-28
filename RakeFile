@@ -3,19 +3,21 @@ require_relative 'backend/renderer.rb'
 
 desc "init rollup js compilation server for development"
 task :watch do
-  system("rollup --config rollup.config.dev.js -w")
+  system("rollup --config build_tools/rollup.config.dev.js -w")
 end
 
 desc "generate JSdoc"
 task :jsdoc do
   include Paths
-  system("./node_modules/.bin/jsdoc", "#{PUBLIC_FOLDER}/js", "-r", "-d", DOCUMENTATION_FOLDER)
+  system("./node_modules/.bin/jsdoc", "#{PUBLIC_FOLDER}/js", "-r",
+    "-R", "README.md",
+    "-c", "build_tools/jsdoc.json")
 end
 
 desc "render data.json"
 task :data do
   include Paths
-  Renderer.compile_data_json_to(DATA_FOLDER, NODES_CONNECTION_YAML, SCOPE_YAML)
+  Renderer.compile_data_json_to(DATA_FOLDER, NODES_YAML, SCOPE_YAML, MEDIA_YAML)
 end
 
 desc "render website HTML"
@@ -27,13 +29,13 @@ end
 desc "compile dev files"
 task :dev => [:data, :html] do
   system("rm -rf dist/")
-  system("rollup --config rollup.config.dev.js")
+  system("rollup --config build_tools/rollup.config.dev.js")
 end
 
 desc "compile production files"
 task :prod => [:data, :html] do
   system("rm -rf dist/")
-  system("rollup --config rollup.config.prod.js")
+  system("rollup --config build_tools/rollup.config.prod.js")
 end
 
 desc "push to production server"
