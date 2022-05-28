@@ -1,7 +1,7 @@
 /** @module RendererModules.ComponentController */
 
-import { global } from "../store";
-import { generateUID } from "../utils/general";
+import { global } from "store";
+import { generateUID } from "utils/general";
 
 /**
  * A base for a lit component controller that register itself with the event dispatcher, so that the singleton class nodeWalker will update the target component when {@link LogicModules.module:NodeWalker#teleport NodeWalker's teleport function} is called.

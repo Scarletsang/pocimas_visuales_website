@@ -1,5 +1,5 @@
 /** @module DataModules.NodeScopes */
-import { constructMemberSetsMap } from "../utils/general";
+import { constructMemberSetsMap } from "utils/general";
 
 /**
  * An interface to get useful information or properties of the scopes.

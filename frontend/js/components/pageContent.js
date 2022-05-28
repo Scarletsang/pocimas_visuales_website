@@ -1,8 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { defaultButton, defaultFonts, defaultMedia } from "./styles";
-import { pauseVimeoPlayer } from "../utils/components";
-import ComponentController from "../renderer/componentController";
+import { defaultButton, defaultFonts, defaultMedia } from "components/styles";
+import { pauseVimeoPlayer } from "utils/components";
+import ComponentController from "renderer/componentController";
 
 export default class PageContent extends LitElement {
   controller = new PageContentController(this);

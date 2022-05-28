@@ -1,5 +1,5 @@
 /** @module DataModules.Inquiry */
-import NodeData from "./nodes";
+import NodeData from "data/nodes";
 
 /**
  * A singleton class that creates a {@link DataModules.module:Inquiry.PropInquiry PropInquiry} upon inquiry. Inquired nodes will be memorized.

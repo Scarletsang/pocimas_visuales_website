@@ -1,8 +1,8 @@
 import { LitElement, css, html} from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { animate } from '@lit-labs/motion';
-import { mappings } from "../store";
-import ComponentController from '../renderer/componentController';
+import { mappings } from "store";
+import ComponentController from 'renderer/componentController';
 
 export default class NavigationBar extends LitElement {
 

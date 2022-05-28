@@ -1,7 +1,7 @@
-import ComponentRenderer from "./renderer/componentRenderer";
-import NodeScopes from "./data/scopes";
-import NodeData from "./data/nodes";
-import MediaData from "./data/media";
+import ComponentRenderer from "renderer/componentRenderer";
+import NodeScopes from "data/scopes";
+import NodeData from "data/nodes";
+import MediaData from "data/media";
 
 export const global   = new Map();
 export const mappings = new Map();

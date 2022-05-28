@@ -1,6 +1,6 @@
 /** @module LogicModules.NodePointer */
-import { global, mappings } from "../store";
-import NodeWalker from "./nodeWalker";
+import { global, mappings } from "store";
+import NodeWalker from "logic/nodeWalker";
 
 /**
  * A singleton class that points to the node that the user is currently on. It is a duo with the {@link LogicModules.module:NodeWalker NodeWalker class}, which handles pure calculation for node traversal, while this class trigger the following side effects:

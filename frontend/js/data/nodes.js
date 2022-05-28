@@ -1,5 +1,5 @@
 /** @module DataModules.NodeData */
-import { constructMemberSetsMap } from "../utils/general";
+import { constructMemberSetsMap } from "utils/general";
 
 /**
  * An interface to get the data of every node (a.k.a. every page of the website).

@@ -14,10 +14,10 @@ export function generateUID() {
 
 /**
  * Given an array of groups, each group contain data of itself and its members. Construct a setmap where the group IDs can be queried by the id of its member.
- * @template GroupId,GroupData,MemberId
- * @param {Array<[GroupId, GroupData]>} groupEntries A key/value pair array describing the group data. It is recommended to pass in the result from {@link Object.entries}
- * @param {(groupData: GroupData) => Array<MemberId>} extractFunction A function that extract the member IDs from the group data. This function can also be treated as a transform function, so that the result map can be queried by the transformed values.
+ * @param {Array<Array<GroupId, GroupData>>} groupEntries A key/value pair array describing the group data. It is recommended to pass in the result from {@link Object.entries}
+ * @param {function(GroupData): Array<MemberId>} extractFunction A function that extract the member IDs from the group data. This function can also be treated as a transform function, so that the result map can be queried by the transformed values.
  * @returns {Map<MemberId, Set<GroupId>>}
+ * @template GroupId, GroupData, MemberId
  */
 export function constructMemberSetsMap(groupEntries, extractFunction) {
   let targetMap = new Map();
@@ -36,18 +36,18 @@ export function constructMemberSetsMap(groupEntries, extractFunction) {
 
 /**
  * Return the first element in a javascript set.
- * @template T
  * @param {Set<T>} set 
  * @returns {T}
+ * @template T
  */
 export function firstItemInSet(set) {let [first] = set; return first;}
 
 /**
  * Return the first element of the intersection of two sets.
- * @template T
  * @param {Set<T>} set1 
  * @param {Set<T>} set2 
  * @returns {T | false}
+ * @template T
  */
 export function firstIntersectItem(set1, set2) {
   for (const set1Item of set1) {
@@ -58,11 +58,11 @@ export function firstIntersectItem(set1, set2) {
 
 /**
  * Returns a slice of an array. The sub-array starts from and ends with the specified values.
- * @template T
  * @param {Array<T>} array 
  * @param {T} startValue 
  * @param {T} endValue 
  * @returns {Array<T>}
+ * @template T
  */
 export function subArrayByItemValues(array, startValue, endValue) {
   let result = [];
@@ -84,10 +84,10 @@ export function subArrayByItemValues(array, startValue, endValue) {
 
 /**
  * Remove all items in an array that has the specified value.
- * @template T
  * @param {Array<T>} array 
  * @param {T} itemValue 
  * @returns {Array<T>}
+ * @template T
  */
 export function removeItemFromArray(array, itemValue) {
   return array.filter((item) => item != itemValue);

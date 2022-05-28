@@ -1,6 +1,6 @@
 /** @module LogicModules.NodeWalker */
-import { mappings } from "./store";
-import { firstItemInSet, firstIntersectItem, subArrayByItemValues } from "./helpers";
+import { mappings } from "store";
+import { firstItemInSet, firstIntersectItem, subArrayByItemValues } from "utils/general";
 
 /**
  * A singleton class responsible for making calculations that involves traversing the nodes in a directed graph, where each node represents one page of the website.

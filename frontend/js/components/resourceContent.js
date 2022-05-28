@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { when } from 'lit/directives/when.js';
 import { classMap } from 'lit/directives/class-map.js'
-import { repeat, setAttributes } from "../utils/components";
-import { defaultButton, defaultFonts, defaultMedia } from "./styles";
-import ComponentController from "../renderer/componentController";
+import { repeat, setAttributes } from "utils/components";
+import { defaultButton, defaultFonts, defaultMedia } from "components/styles";
+import ComponentController from "renderer/componentController";
 
 export default class ResourceContent extends LitElement {
 

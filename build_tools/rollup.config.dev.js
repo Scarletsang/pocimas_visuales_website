@@ -4,7 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
-import summary from 'rollup-plugin-summary';
+import includePaths from 'rollup-plugin-includepaths';
 
 export default {
   plugins: [
@@ -25,8 +25,6 @@ export default {
       module: true,
       warnings: true,
     }),
-    // Print bundle summary
-    summary(),
     // Optional: copy any static assets to build directory
     copy({
       patterns: [
@@ -36,6 +34,13 @@ export default {
       ],
       rootDir: './frontend'
     }),
+    // Use absolute path for imports
+    includePaths({
+      include: {},
+      paths: ['frontend/js'],
+      external: [],
+      extensions: ['.js', '.json', '.html']
+    })
   ],
   output: {
     sourcemap: false,
