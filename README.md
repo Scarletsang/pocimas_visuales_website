@@ -2,9 +2,7 @@
 
 This is a website made exclusively for the art project **Pócima visual 02: Estando aquí no estoy, estoy.** organized by Cristina Maldonado. This is a documentation of my process of designing the website appearance, coding it and mangaging the website.
 
-Official Website: [pocimasvisuales.com](pocimasvisuales.com)
-
-[[_TOC_]]
+Official Website: [pocimasvisuales.com](https://pocimasvisuales.com)
 
 ## Chapter 1: idea
 
